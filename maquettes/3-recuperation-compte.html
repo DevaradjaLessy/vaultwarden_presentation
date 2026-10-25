@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaultwarden · S'inscrire à la récupération du compte (maquette de formation)</title>
+<style>
+/* Maquette du coffre Vaultwarden (thème clair) : inscription à la récupération du compte par le menu ⋮ de l'organisation,
+   puis confiance envers l'organisation (phrase d'empreinte FICTIVE). Rien n'est envoyé. Touche A : afficher ou masquer le guide. */
+:root{
+  --bg:#F3F6F9; --card:#FFFFFF; --line:#DCE1E8; --field:#8D9CB5; --text:#1B2029; --muted:#5A6D91;
+  --primary:#175DDC; --primary-hover:#1A41AC; --nav:#175DDC; --danger:#C83522; --warn-bg:#FFF4E0; --warn-line:#E0A132; --warn-text:#7A4600;
+  --pink:#C01176; --note:#00857B;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:"Inter","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+svg{flex:none}
+
+/* Barre « Parcours du jour J », commune à toutes les pages de la maquette */
+.parcours{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 16px;background:#F2FAF9;
+  border-bottom:1px solid #CFE6E3;font:500 13px/1 "Segoe UI",system-ui,sans-serif;color:#2D3748}
+.parcours .p-titre{margin-right:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#00857B}
+.parcours a{display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border-radius:999px;color:#2D3748;text-decoration:none}
+.parcours a b{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#D5E9E6;color:#00857B;font-size:11px}
+.parcours a:hover{background:#E2F2EF}
+.parcours a[aria-current]{background:#00857B;color:#fff}
+.parcours a[aria-current] b{background:#fff;color:#00857B}
+.parcours .p-fl{color:#8FB8B3}
+
+/* Application : navigation à gauche, contenu à droite */
+.app{display:grid;grid-template-columns:232px 1fr;min-height:calc(100vh - 41px)}
+.nav-app{display:flex;flex-direction:column;gap:4px;padding:18px 12px;background:var(--nav);color:#fff}
+.marque{display:flex;align-items:center;gap:10px;margin:0 6px 18px;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.marque svg{width:26px;height:26px}
+.nav-app a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:#fff;text-decoration:none;font-size:15px;opacity:.92}
+.nav-app a.actif{background:rgba(255,255,255,.18);opacity:1;font-weight:600}
+.nav-app a svg{width:18px;height:18px}
+.contenu{padding:22px 28px 40px;min-width:0}
+.haut{display:flex;align-items:center;justify-content:space-between;margin:0 0 20px}
+.haut h1{margin:0;font-size:24px;font-weight:600}
+.haut .d{display:flex;align-items:center;gap:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 18px;border-radius:999px;border:1px solid transparent;
+  font-size:15px;font-weight:600;cursor:pointer}
+.btn-p{background:var(--primary);color:#fff}
+.btn-p:hover{background:var(--primary-hover)}
+.btn-s{background:#fff;color:var(--text);border-color:var(--field)}
+.btn-s:hover{background:#F3F6F9}
+.avatar{width:36px;height:36px;border-radius:50%;background:#7D3FBF;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+.grille{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px}
+
+/* Filtres */
+.filtres{padding:0 0 10px}
+.f-tete{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;font-size:14px;font-weight:700;letter-spacing:.04em}
+.f-tete svg{width:18px;height:18px;color:var(--primary)}
+.f-rech{display:flex;align-items:center;gap:8px;margin:0 16px 14px;padding:0 12px;height:38px;border:1px solid var(--field);border-radius:8px;color:var(--muted)}
+.f-rech input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:14px;color:var(--text)}
+.f-rech svg{width:16px;height:16px}
+.f-org{position:relative;display:flex;align-items:center;gap:10px;margin:0 8px;padding:8px 8px 8px 10px;border-radius:8px}
+.f-org:hover{background:#F3F6F9}
+.f-org .ico{width:18px;height:18px;color:var(--primary)}
+.f-org a{flex:1;color:var(--primary);font-weight:600;font-size:15px;text-decoration:none}
+.points{width:30px;height:30px;border:0;border-radius:6px;background:none;color:var(--text);display:grid;place-items:center;cursor:pointer}
+.points:hover,.points[aria-expanded=true]{background:#E4EAF2}
+.points svg{width:18px;height:18px}
+.menu{position:absolute;left:calc(100% - 44px);top:calc(100% + 4px);z-index:12;white-space:nowrap;padding:6px;background:#fff;border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 12px 28px rgba(15,23,32,.16)}
+.menu[hidden]{display:none}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;border-radius:6px;background:none;font-size:15px;font-weight:600;color:var(--text);text-align:left;cursor:pointer}
+.menu button:hover{background:#EEF3FB}
+.menu svg{width:18px;height:18px}
+.f-sep{height:1px;margin:10px 16px;background:var(--line)}
+.arbre{margin:0;padding:0 8px;list-style:none;font-size:15px}
+.arbre li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;color:var(--text)}
+.arbre li.t{color:var(--primary);font-weight:600}
+.arbre li.s{padding-left:34px}
+.arbre svg{width:16px;height:16px;color:var(--muted)}
+.arbre li.t svg{color:var(--primary)}
+
+/* Liste des éléments */
+.l-tete{display:grid;grid-template-columns:44px 1fr 200px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);font-size:15px;color:var(--muted);font-weight:600}
+.l-tete input{width:18px;height:18px;margin:0;accent-color:var(--primary)}
+.vide{display:flex;flex-direction:column;align-items:center;gap:14px;padding:70px 20px 80px;color:var(--muted);font-size:16px;text-align:center}
+.vide svg{width:84px;height:84px;color:#B5C3DA}
+.fin{display:none;margin:0 0 18px;padding:16px 18px;border:1px solid #9FD5BC;border-left:6px solid #017E45;border-radius:10px;background:#ECF8F2;color:#0B5D38;font-size:15px;line-height:1.5}
+.fin.on{display:block}
+.fin b{color:#064A2B}
+.fin a{color:#0B5D38;font-weight:700}
+.fin a.suite{display:inline-block;margin-top:10px;padding:9px 16px;border-radius:10px;background:#017E45;color:#fff;text-decoration:none}
+
+/* Boîtes de dialogue */
+.voile{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:16px;background:rgba(15,23,32,.38)}
+.voile[hidden]{display:none}
+.dialog{width:100%;max-width:540px;background:#fff;border-radius:14px;box-shadow:0 24px 60px rgba(15,23,32,.25)}
+.dialog[hidden]{display:none}
+.d-tete{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 22px 0}
+.d-tete h2{margin:0;font-size:20px;font-weight:600}
+.d-tete h2 small{margin-left:6px;font-size:13px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.02em}
+.fermer{width:32px;height:32px;border:0;border-radius:8px;background:none;color:var(--text);display:grid;place-items:center;cursor:pointer}
+.fermer:hover{background:#F3F6F9}
+.fermer svg{width:20px;height:20px}
+.d-corps{padding:18px 22px 0;font-size:15px;line-height:1.55}
+.d-corps p{margin:0}
+.d-pied{display:flex;gap:10px;padding:22px 22px 22px}
+.d-pied .btn{border-radius:10px;height:40px}
+.avert{padding:14px 16px;border:1px solid var(--warn-line);border-radius:10px;background:var(--warn-bg);color:var(--warn-text)}
+.avert .t{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-weight:700;font-size:16px}
+.avert svg{width:18px;height:18px}
+label.l{display:block;margin:18px 0 8px;font-size:14px;font-weight:600}
+label.l .req{color:var(--danger);margin-left:2px}
+.groupe{display:flex;align-items:stretch;height:40px;border:1px solid var(--field);border-radius:8px;overflow:hidden;background:#fff}
+.groupe:focus-within{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+.groupe.err{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger)}
+.groupe input{flex:1;min-width:0;padding:0 12px;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--text)}
+.groupe input[type=password]{font-size:17px;letter-spacing:.1em}
+.oeil{flex:none;width:46px;border:0;background:none;color:#3D4A61;display:grid;place-items:center;cursor:pointer}
+.oeil svg{width:20px;height:20px}
+.erreur{display:none;align-items:center;gap:6px;margin:6px 0 0;font-size:13px;color:var(--danger)}
+.erreur.on{display:flex}
+.erreur svg{width:15px;height:15px}
+.empreinte{margin-top:18px}
+.empreinte code{font:500 15px/1.4 ui-monospace,"Cascadia Mono",Consolas,monospace;color:var(--pink);word-break:break-all}
+.btn .tourne{width:16px;height:16px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:tourne .7s linear infinite;display:none}
+.btn.charge .tourne{display:inline-block}
+@keyframes tourne{to{transform:rotate(360deg)}}
+
+/* Notification */
+.toast{position:fixed;right:20px;top:58px;z-index:40;display:flex;align-items:center;gap:10px;max-width:420px;padding:14px 16px;border-radius:10px;
+  background:#fff;border:1px solid var(--line);border-left:6px solid #017E45;box-shadow:0 12px 28px rgba(15,23,32,.16);font-size:15px}
+.toast.neutre{border-left-color:var(--muted)}
+.toast[hidden]{display:none}
+.toast svg{width:20px;height:20px;color:#017E45}
+
+/* Guide de la maquette (bulle qui montre le prochain clic) */
+.coach{position:fixed;z-index:35;max-width:300px;padding:12px 14px;border-radius:10px;background:var(--note);color:#fff;
+  font:500 14px/1.45 "Segoe UI",system-ui,sans-serif;box-shadow:0 10px 26px rgba(0,80,74,.3);pointer-events:none;transition:top .25s ease,left .25s ease}
+.coach b{font-weight:700}
+.coach::before{content:"";position:absolute;width:12px;height:12px;background:var(--note);transform:rotate(45deg)}
+.coach.dessous::before{left:18px;top:-6px}
+.coach.droite::before{left:-6px;top:16px}
+.coach[hidden],.sans-guide .coach{display:none}
+.cible{animation:cible 1.8s ease-out infinite}
+.sans-guide .cible{animation:none}
+@keyframes cible{0%{box-shadow:0 0 0 0 rgba(0,133,123,.55)}70%{box-shadow:0 0 0 10px rgba(0,133,123,0)}100%{box-shadow:0 0 0 0 rgba(0,133,123,0)}}
+
+/* Barre de la maquette */
+.outils{position:fixed;bottom:12px;right:12px;z-index:40;display:flex;gap:8px;align-items:center;font:500 12px/1 "Segoe UI",system-ui,sans-serif}
+.outils span{padding:6px 10px;border-radius:999px;background:#FFF4D6;color:#7A5200;border:1px solid #F0D58C}
+.outils button{padding:6px 12px;border:1px solid var(--note);border-radius:999px;background:#fff;color:var(--note);font-size:12px;font-weight:600;cursor:pointer}
+.outils button[aria-pressed=true]{background:var(--note);color:#fff}
+@media (max-width:980px){.app{grid-template-columns:1fr}.nav-app{display:none}.grille{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: reduce){.cible,.btn .tourne{animation:none}}
+</style>
+</head>
+<body>
+<nav class="parcours" aria-label="Parcours du jour J">
+  <span class="p-titre">Parcours du jour J</span>
+  <a href="1-mail-invitation.html"><b>1</b>Le mail d'invitation</a><span class="p-fl">›</span>
+  <a href="2-rejoindre-vaultwarden.html"><b>2</b>Votre mot de passe principal</a><span class="p-fl">›</span>
+  <a href="3-recuperation-compte.html" aria-current="page"><b>3</b>La récupération du compte</a><span class="p-fl">›</span>
+  <a href="4-et-maintenant.html"><b>4</b>Et maintenant ?</a><span class="p-fl">›</span>
+  <a href="5-application-bitwarden.html"><b>5</b>L'application Bitwarden</a>
+</nav>
+<div class="outils"><span>Maquette de formation · rien n'est envoyé</span><button type="button" id="b-guide" aria-pressed="true">Guide (A)</button></div>
+
+<div class="app" id="app">
+  <aside class="nav-app" aria-hidden="true">
+    <div class="marque"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/></svg>Vaultwarden</div>
+    <a class="actif" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="12" cy="12.5" r="3"/></svg>Coffres</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 21 3l-6 18-4-8z"/></svg>Send</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>Outils</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Rapports</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Paramètres</a>
+  </aside>
+
+  <section class="contenu">
+    <header class="haut">
+      <h1>Tous les coffres</h1>
+      <div class="d"><button class="btn btn-p" type="button">+ Nouveau</button><span class="avatar" aria-label="Prénom NOM">PN</span></div>
+    </header>
+
+    <div class="fin" id="fin"><b>C'est fait : vous êtes inscrit(e) à la récupération du compte.</b> Si vous oubliez un jour votre mot de passe principal,
+      l'équipe informatique pourra vous redonner l'accès. <br><a class="suite" href="4-et-maintenant.html">Et maintenant ? Ce que vous ferez ensuite ›</a></div>
+
+    <div class="grille">
+      <div class="card filtres">
+        <div class="f-tete">FILTRES <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg></div>
+        <label class="f-rech"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input placeholder="Rechercher une organisation" aria-label="Rechercher une organisation"></label>
+        <div class="f-org">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 21V5l8-2v18M12 8h8v13M2 21h20M7 8h2M7 12h2M7 16h2M15 12h2M15 16h2"/></svg>
+          <a href="#" onclick="return false">SEMAC</a>
+          <button class="points" id="points" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Options de l'organisation SEMAC">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg></button>
+          <div class="menu" id="menu" role="menu" hidden>
+            <button type="button" role="menuitem" id="m-recup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7.5" cy="12" r="4"/><path d="M11.5 12H21M18 12v3M15 12v2"/></svg><span id="m-recup-txt">S'inscrire à la récupération du compte</span></button>
+          </div>
+        </div>
+        <div class="f-sep"></div>
+        <ul class="arbre" aria-hidden="true">
+          <li class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>Tous les éléments</li>
+          <li class="s">Favoris</li><li class="s">Identifiant</li><li class="s">Carte de paiement</li><li class="s">Identité</li><li class="s">Note sécurisée</li>
+          <li class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>Dossiers</li>
+          <li class="s">Aucun dossier</li>
+          <li class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>Collections</li>
+          <li class="s">Corbeille</li>
+        </ul>
+      </div>
+
+      <div class="card liste">
+        <div class="l-tete"><input type="checkbox" aria-label="Tout sélectionner"><span>Nom</span><span>Propriétaire</span></div>
+        <div class="vide">
+          <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><rect x="10" y="14" width="44" height="38" rx="5"/><circle cx="32" cy="33" r="8"/><path d="M32 25v-3M32 44v-3M24 33h-3M43 33h-3"/></svg>
+          <p>Aucun élément à afficher.</p>
+          <button class="btn btn-s" type="button">+ Nouvel élément</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="voile" id="voile" hidden>
+  <div class="dialog" id="d-recup" role="dialog" aria-modal="true" aria-labelledby="t-recup" hidden>
+    <div class="d-tete"><h2 id="t-recup">S'inscrire à la récupération du compte</h2>
+      <button class="fermer" type="button" data-fermer aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <form class="d-corps" id="f-recup" novalidate>
+      <div class="avert"><div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></svg>Attention</div>
+        L'inscription permettra aux administrateurs de l'organisation de changer votre mot de passe principal</div>
+      <label class="l" for="r-mdp">Mot de passe principal<span class="req">*</span></label>
+      <div class="groupe" id="g-mdp"><input id="r-mdp" type="password" autocomplete="off">
+        <button class="oeil" type="button" id="oeil" aria-label="Afficher le mot de passe"></button></div>
+      <p class="erreur" id="e-mdp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></svg>Entrée requise.</p>
+    </form>
+    <div class="d-pied"><button class="btn btn-p" type="submit" form="f-recup" id="b-soumettre"><span class="tourne"></span>Soumettre</button>
+      <button class="btn btn-s" type="button" data-fermer>Annuler</button></div>
+  </div>
+
+  <div class="dialog" id="d-confiance" role="dialog" aria-modal="true" aria-labelledby="t-confiance" hidden>
+    <div class="d-tete"><h2 id="t-confiance">Faire confiance à l'organisation<small>SEMAC</small></h2>
+      <button class="fermer" type="button" data-fermer aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="d-corps">
+      <p>Cette organisation a une politique de sécurité Entreprise qui vous inscrira dans la récupération de votre compte. L'inscription permettra aux administrateurs de l'organisation de changer votre mot de passe. Continuez seulement si vous reconnaissez cette organisation et que la phrase d'empreinte affichée ci-dessous correspond à l'empreinte de l'organisation.</p>
+      <p class="empreinte">Phrase d'empreinte : <code>harbor-lantern-pebble-orbit-meadow</code></p>
+    </div>
+    <div class="d-pied"><button class="btn btn-p" type="button" id="b-confiance">Faire confiance</button>
+      <button class="btn btn-s" type="button" id="b-refus">Ne pas faire confiance</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span id="toast-txt"></span></div>
+<div class="coach" id="coach" hidden></div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const points = $("points"), menu = $("menu"), voile = $("voile"), dRecup = $("d-recup"), dConf = $("d-confiance");
+  const mdp = $("r-mdp"), coach = $("coach");
+  let inscrit = false, etape = "points";
+
+  // Guide : une bulle à côté du prochain élément à cliquer
+  const guides = {
+    points: { cible: () => points, txt: "Cliquez sur les <b>3 petits points</b> à côté de SEMAC." },
+    menu: { cible: () => $("m-recup"), txt: "Cliquez sur <b>« S'inscrire à la récupération du compte »</b>." },
+    mdp: { cible: () => $("g-mdp"), ancre: () => dRecup, txt: "Tapez votre <b>mot de passe principal</b> (ici, n'importe quel texte), puis <b>« Soumettre »</b>." },
+    confiance: { cible: () => $("b-confiance"), ancre: () => dConf, txt: "Vérifiez la <b>phrase d'empreinte</b> avec celle que donne l'équipe informatique, puis cliquez sur <b>« Faire confiance »</b>." },
+  };
+  const placer = () => {
+    document.querySelectorAll(".cible").forEach(e => e.classList.remove("cible"));
+    const g = guides[etape];
+    if (!g) { coach.hidden = true; return; }
+    const cible = g.cible(); cible.classList.add("cible");
+    coach.innerHTML = g.txt; coach.hidden = false;
+    const r = cible.getBoundingClientRect(), a = (g.ancre ? g.ancre() : cible).getBoundingClientRect(), w = coach.offsetWidth;
+    if (a.right + 16 + w < innerWidth - 8) {
+      coach.className = "coach droite"; coach.style.left = (a.right + 16) + "px"; coach.style.top = Math.max(50, r.top - 4) + "px";
+    } else {
+      coach.className = "coach dessous"; coach.style.left = Math.max(8, Math.min(r.left - 8, innerWidth - w - 8)) + "px"; coach.style.top = (r.bottom + 12) + "px";
+    }
+  };
+  const aller = e => { etape = e; requestAnimationFrame(placer); };
+  addEventListener("resize", placer); addEventListener("scroll", placer, true);
+
+  const toast = (txt, neutre) => {
+    $("toast-txt").textContent = txt; $("toast").classList.toggle("neutre", !!neutre); $("toast").hidden = false;
+    clearTimeout(toast.t); toast.t = setTimeout(() => $("toast").hidden = true, 5000);
+  };
+
+  // Menu ⋮ de l'organisation
+  const ouvrirMenu = ouvert => { menu.hidden = !ouvert; points.setAttribute("aria-expanded", ouvert); };
+  points.addEventListener("click", e => {
+    e.stopPropagation(); const ouvert = menu.hidden; ouvrirMenu(ouvert);
+    if (!inscrit) aller(ouvert ? "menu" : "points");
+  });
+  document.addEventListener("click", e => { if (!menu.hidden && !menu.contains(e.target)) { ouvrirMenu(false); if (!inscrit) aller("points"); } });
+
+  // Boîtes de dialogue
+  const montrer = d => { voile.hidden = false; dRecup.hidden = d !== dRecup; dConf.hidden = d !== dConf; };
+  const fermerTout = () => { voile.hidden = true; dRecup.hidden = dConf.hidden = true; };
+  $("m-recup").addEventListener("click", () => {
+    ouvrirMenu(false);
+    if (inscrit) { toast("Dans la vraie application, ce menu permet de se retirer de la récupération du compte.", true); return; }
+    mdp.value = ""; $("g-mdp").classList.remove("err"); $("e-mdp").classList.remove("on");
+    montrer(dRecup); mdp.focus(); aller("mdp");
+  });
+  document.querySelectorAll("[data-fermer]").forEach(b => b.addEventListener("click", () => { fermerTout(); aller(inscrit ? null : "points"); }));
+
+  const oeil = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const oeilBarre = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.1A10.9 10.9 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6C3.9 8.4 2 12 2 12s3.6 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+  $("oeil").innerHTML = oeil;
+  $("oeil").addEventListener("click", () => { const c = mdp.type === "password"; mdp.type = c ? "text" : "password"; $("oeil").innerHTML = c ? oeilBarre : oeil; });
+
+  // Soumettre : champ obligatoire, puis demande de confiance envers l'organisation
+  $("f-recup").addEventListener("submit", e => {
+    e.preventDefault();
+    const vide = !mdp.value;
+    $("g-mdp").classList.toggle("err", vide); $("e-mdp").classList.toggle("on", vide);
+    if (vide) { mdp.focus(); return; }
+    const b = $("b-soumettre"); b.classList.add("charge");
+    setTimeout(() => { b.classList.remove("charge"); montrer(dConf); aller("confiance"); }, 700);
+  });
+  mdp.addEventListener("input", () => { if (mdp.value) { $("g-mdp").classList.remove("err"); $("e-mdp").classList.remove("on"); } });
+
+  $("b-confiance").addEventListener("click", () => {
+    fermerTout(); inscrit = true; aller(null);
+    $("m-recup-txt").textContent = "Se retirer de la récupération du compte";
+    $("fin").classList.add("on");
+    toast("Inscription à la récupération du compte réussie.");
+  });
+  $("b-refus").addEventListener("click", () => {
+    fermerTout(); aller("points");
+    toast("Vous n'avez pas fait confiance : rien n'a changé. En cas de doute, appelez l'équipe informatique.", true);
+  });
+
+  // Guide (bouton ou touche A)
+  const bg = $("b-guide");
+  const basculer = () => { const sans = document.body.classList.toggle("sans-guide"); bg.setAttribute("aria-pressed", !sans); placer(); };
+  bg.addEventListener("click", basculer);
+  addEventListener("keydown", e => { if ((e.key === "a" || e.key === "A") && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) basculer(); });
+  addEventListener("keydown", e => { if (e.key === "Escape" && !voile.hidden) { fermerTout(); aller(inscrit ? null : "points"); } });
+
+  aller("points");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rejoindre Vaultwarden (maquette de formation)</title>
+<style>
+/* Maquette de la page « Rejoindre Vaultwarden » (invitation à l'organisation), version fond blanc, pour la formation.
+   Aucune donnée n'est envoyée : le formulaire ne quitte pas la page. Touche A : explications. */
+:root{
+  --bg:#FFFFFF; --card:#FFFFFF; --card-line:#DCE1E8; --field:#8D9CB5; --field-bg:#FFFFFF; --label:#1B2029; --help:#5A6D91;
+  --text:#1B2029; --primary:#175DDC; --primary-hover:#1A41AC; --track:#E3E8EF; --danger:#C83522; --warning:#B86E00; --success:#017E45;
+  --note:#00857B;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+main{display:flex;justify-content:center;gap:28px;padding:44px 16px 56px}
+.page{display:flex;flex-direction:column;align-items:center;width:100%;max-width:448px}
+
+/* En-tête : cadenas, titre, consigne */
+.logo{width:104px;height:88px}
+h1{margin:22px 0 14px;font-size:28px;font-weight:500;letter-spacing:-.01em;text-align:center}
+.consigne{margin:0 0 30px;max-width:440px;font-size:16px;line-height:1.55;text-align:center}
+
+/* Carte */
+.card{position:relative;width:100%;padding:32px 32px 32px;background:var(--card);border:1px solid var(--card-line);border-radius:16px;
+  box-shadow:0 1px 2px rgba(15,23,32,.04)}
+.champ{position:relative;margin:0 0 22px}
+label.l{display:block;margin:0 0 8px;font-size:14px;font-weight:600;color:var(--label)}
+label.l .req{color:var(--danger);margin-left:2px}
+.groupe{display:flex;align-items:stretch;height:40px;border:1px solid var(--field);border-radius:8px;background:var(--field-bg);overflow:hidden}
+.groupe:focus-within{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+.groupe.err{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger)}
+.groupe input{flex:1;min-width:0;padding:0 12px;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--text)}
+.groupe input[type=password]{font-size:17px;letter-spacing:.1em}
+.oeil{flex:none;width:48px;border:0;border-left:1px solid var(--field);background:#F6F8FA;color:#3D4A61;display:grid;place-items:center;cursor:pointer}
+.oeil:hover{background:#EDF1F6}
+.oeil svg{width:20px;height:20px}
+.help{margin:8px 0 0;font-size:12.5px;line-height:1.5;color:var(--help)}
+.help b{font-weight:600}
+.msg{display:none;margin:6px 0 0;font-size:12.5px;color:var(--danger)}
+.msg.on{display:block}
+
+/* Jauge : barre fine, libellé dessous */
+.jauge{height:8px;margin:10px 0 0;border-radius:999px;background:var(--track);overflow:hidden}
+.jauge i{display:block;height:100%;width:0;border-radius:999px;background:var(--primary);transition:width .3s ease,background .3s ease}
+.jauge-txt{margin:8px 0 0;font-size:12.5px;color:var(--help);min-height:18px}
+
+.check{position:relative;display:flex;gap:12px;align-items:flex-start;margin:4px 0 22px;font-size:15px;font-weight:600;line-height:1.45;cursor:pointer}
+.check input{flex:none;width:18px;height:18px;margin:2px 0 0;accent-color:var(--primary)}
+.btn{display:block;width:100%;height:40px;border:0;border-radius:12px;background:var(--primary);color:#fff;
+  font-family:inherit;font-size:15px;font-weight:500;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.ok{display:none;margin:16px 0 0;padding:12px 14px;border:1px solid #9FD5BC;border-radius:10px;background:#ECF8F2;color:#0B5D38;font-size:14px;line-height:1.45}
+.ok.on{display:block}
+.ok .suite{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:10px;background:#017E45;color:#fff;font-weight:600;text-decoration:none}
+
+/* Explications (touche A) : pastilles numérotées et colonne de notes */
+.bulle{position:absolute;right:-46px;top:28px;z-index:2;display:none;width:26px;height:26px;border-radius:50%;
+  background:var(--note);color:#fff;font:700 13px/26px "Segoe UI",system-ui,sans-serif;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.expl .bulle{display:block}
+aside.notes{display:none;width:340px;flex:none;padding-top:250px}
+.expl aside.notes{display:block}
+aside.notes h2{margin:0 0 12px;font:700 13px/1 "Segoe UI",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--note)}
+aside.notes ol{margin:0;padding:0;list-style:none;counter-reset:n}
+aside.notes li{position:relative;margin:0 0 12px;padding:12px 14px 12px 46px;border:1px solid #CFE6E3;border-radius:10px;background:#fff;
+  font:400 14px/1.45 "Segoe UI",system-ui,sans-serif;color:#2D3748;counter-increment:n}
+aside.notes li::before{content:counter(n);position:absolute;left:12px;top:12px;width:24px;height:24px;border-radius:50%;
+  background:var(--note);color:#fff;font:700 12px/24px "Segoe UI",system-ui,sans-serif;text-align:center}
+aside.notes li b{color:var(--text)}
+@media (max-width:1000px){main{flex-direction:column;align-items:center} aside.notes{width:100%;max-width:448px;padding-top:0} .bulle{right:8px;top:-10px}}
+
+/* Barre de la maquette, hors de la page reproduite */
+.outils{position:fixed;bottom:12px;right:12px;z-index:5;display:flex;gap:8px;align-items:center;font:500 12px/1 "Segoe UI",system-ui,sans-serif}
+.outils span{padding:6px 10px;border-radius:999px;background:#FFF4D6;color:#7A5200;border:1px solid #F0D58C}
+.outils button{padding:6px 12px;border:1px solid var(--note);border-radius:999px;background:#fff;color:var(--note);
+  font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.outils button[aria-pressed=true]{background:var(--note);color:#fff}
+@media print{.outils{display:none}}
+/* Barre « Parcours du jour J », commune à toutes les pages de la maquette */
+.parcours{position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 16px;background:#F2FAF9;
+  border-bottom:1px solid #CFE6E3;font:500 13px/1 "Segoe UI",system-ui,sans-serif;color:#2D3748}
+.parcours .p-titre{margin-right:6px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#00857B}
+.parcours a{display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border-radius:999px;color:#2D3748;text-decoration:none}
+.parcours a b{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#D5E9E6;color:#00857B;font-size:11px}
+.parcours a:hover{background:#E2F2EF}
+.parcours a[aria-current]{background:#00857B;color:#fff}
+.parcours a[aria-current] b{background:#fff;color:#00857B}
+.parcours .p-fl{color:#8FB8B3}
+@media print{.parcours{display:none}}
+</style>
+</head>
+<body>
+<nav class="parcours" aria-label="Parcours du jour J">
+  <span class="p-titre">Parcours du jour J</span>
+  <a href="1-mail-invitation.html"><b>1</b>Le mail d'invitation</a><span class="p-fl">›</span>
+  <a href="2-rejoindre-vaultwarden.html" aria-current="page"><b>2</b>Votre mot de passe principal</a><span class="p-fl">›</span>
+  <a href="3-recuperation-compte.html"><b>3</b>La récupération du compte</a><span class="p-fl">›</span>
+  <a href="4-et-maintenant.html"><b>4</b>Et maintenant ?</a><span class="p-fl">›</span>
+  <a href="5-application-bitwarden.html"><b>5</b>L'application Bitwarden</a>
+</nav>
+<div class="outils"><span>Maquette de formation · rien n'est envoyé</span><button type="button" id="b-expl" aria-pressed="false">Explications (A)</button></div>
+
+<main id="m">
+  <div class="page">
+    <svg class="logo" viewBox="0 0 120 100" aria-hidden="true">
+      <path d="M42 50V31a18 18 0 0 1 36 0v19" fill="none" stroke="#175DDC" stroke-width="11" stroke-linecap="round"/>
+      <path d="M42 50V31a18 18 0 0 1 36 0v19" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round"/>
+      <rect x="27" y="44" width="66" height="52" rx="9" fill="#AFC6F5" stroke="#175DDC" stroke-width="3"/>
+      <rect x="7" y="58" width="106" height="24" rx="12" fill="#FFBF00" stroke="#175DDC" stroke-width="3"/>
+      <g fill="#175DDC"><text x="22" y="78" font-family="Consolas,monospace" font-size="24" font-weight="700">***</text></g>
+      <path d="M72 75h12M90 75h12" stroke="#175DDC" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <h1>Rejoindre Vaultwarden</h1>
+    <p class="consigne">Terminer de rejoindre cette organisation en définissant un mot de passe principal.</p>
+
+    <form class="card" id="f" autocomplete="off" novalidate>
+      <div class="champ">
+        <span class="bulle">1</span>
+        <label class="l" for="mdp">Mot de passe principal<span class="req">*</span></label>
+        <div class="groupe" id="g-mdp">
+          <input id="mdp" type="password" value="Mon bus de 7h42 part du quai B !">
+          <button class="oeil" type="button" data-cible="mdp" aria-label="Afficher le mot de passe"></button>
+        </div>
+        <p class="help"><b>Important :</b> Votre mot de passe principal ne peut pas être récupéré si vous l'oubliez ! 14 caractères minimum.</p>
+        <p class="msg" id="e-mdp">Le mot de passe principal doit contenir au moins 14 caractères (règle de l'entreprise).</p>
+        <div class="jauge" aria-hidden="true"><i id="jauge"></i></div>
+        <p class="jauge-txt" id="jauge-txt" aria-live="polite"></p>
+        <span class="bulle" style="top:150px">2</span>
+      </div>
+
+      <div class="champ">
+        <span class="bulle">3</span>
+        <label class="l" for="mdp2">Confirmer le mot de passe principal<span class="req">*</span></label>
+        <div class="groupe" id="g-mdp2">
+          <input id="mdp2" type="password" value="Mon bus de 7h42 part du quai B !">
+          <button class="oeil" type="button" data-cible="mdp2" aria-label="Afficher le mot de passe"></button>
+        </div>
+        <p class="msg" id="e-mdp2">Les deux mots de passe ne correspondent pas.</p>
+      </div>
+
+      <div class="champ">
+        <span class="bulle">4</span>
+        <label class="l" for="indice">Indice du mot de passe principal</label>
+        <div class="groupe"><input id="indice" maxlength="50"></div>
+        <p class="help">Si vous oubliez votre mot de passe, l'indice de mot de passe peut être envoyé à votre adresse courriel. <span id="compte">0</span>/50 caractères maximum.</p>
+      </div>
+
+      <label class="check"><span class="bulle" style="top:0">5</span><input type="checkbox" checked> Vérifier les brèches de données connues pour ce mot de passe</label>
+
+      <div style="position:relative"><span class="bulle" style="top:7px">6</span><button class="btn" type="submit">Créez un compte</button></div>
+      <p class="ok" id="ok"><b>Compte créé (exemple).</b> Étape suivante : votre coffre s'ouvre, et vous vous inscrivez à la récupération du compte.<br><a class="suite" href="3-recuperation-compte.html">Continuer : ouvrir votre coffre ›</a></p>
+    </form>
+  </div>
+
+  <aside class="notes" aria-label="Explications">
+    <h2>Ce que vous verrez</h2>
+    <ol>
+      <li><b>Mot de passe principal</b> : votre clé, une petite phrase. <b>14 caractères minimum.</b> Le message « ne peut pas être récupéré » est standard : notre filet de sécurité, c'est la récupération de compte (étape 4 du jour J).</li>
+      <li><b>La jauge</b> : elle montre la solidité de votre phrase. Visez « Fort ».</li>
+      <li><b>Confirmer</b> : la même phrase, pour éviter une faute de frappe. L'œil à droite affiche ce que vous tapez.</li>
+      <li><b>Indice</b> : facultatif, et il peut vous être envoyé par courriel. Jamais le mot de passe lui-même, ni un indice qui le devine.</li>
+      <li><b>Brèches de données</b> : laissez coché. Le coffre vérifie que ce mot de passe n'apparaît pas dans des fuites connues.</li>
+      <li><b>Créez un compte</b> : c'est fait. Ensuite, votre coffre s'ouvre et vous vous inscrivez à la récupération du compte (étape 3).</li>
+    </ol>
+  </aside>
+</main>
+
+<script>
+(() => {
+  const oeil = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const oeilBarre = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.1A10.9 10.9 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6C3.9 8.4 2 12 2 12s3.6 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+
+  // Afficher / masquer le mot de passe
+  document.querySelectorAll(".oeil").forEach(b => {
+    b.innerHTML = oeil;
+    b.addEventListener("click", () => {
+      const champ = document.getElementById(b.dataset.cible), cache = champ.type === "password";
+      champ.type = cache ? "text" : "password";
+      b.innerHTML = cache ? oeilBarre : oeil;
+      b.setAttribute("aria-label", cache ? "Masquer le mot de passe" : "Afficher le mot de passe");
+    });
+  });
+
+  // Jauge de force : estimation simple (longueur et variété), à la manière de la jauge du coffre
+  const mdp = document.getElementById("mdp"), mdp2 = document.getElementById("mdp2");
+  const jauge = document.getElementById("jauge"), jaugeTxt = document.getElementById("jauge-txt");
+  const niveaux = [
+    { txt: "Très faible", w: 20, c: "var(--danger)" }, { txt: "Très faible", w: 40, c: "var(--danger)" },
+    { txt: "Faible", w: 60, c: "var(--warning)" }, { txt: "Suffisant", w: 80, c: "var(--primary)" }, { txt: "Fort", w: 100, c: "var(--success)" },
+  ];
+  const score = s => {
+    const variete = [/[a-zà-ÿ]/, /[A-ZÀ-Ý]/, /\d/, /[^\sA-Za-z0-9À-ÿ]/].filter(r => r.test(s)).length;
+    if (s.length < 8) return 0;
+    if (s.length < 10) return 1;
+    if (s.length < 12 || variete < 2) return 2;
+    if (s.length < 16 || variete < 3) return 3;
+    return 4;
+  };
+  const majJauge = () => {
+    if (!mdp.value) { jauge.style.width = "0"; jaugeTxt.textContent = ""; return; }
+    const n = niveaux[score(mdp.value)];
+    jauge.style.width = n.w + "%"; jauge.style.background = n.c; jaugeTxt.textContent = n.txt;
+  };
+  mdp.addEventListener("input", majJauge); majJauge();
+
+  // Compteur de l'indice (50 caractères au plus)
+  const indice = document.getElementById("indice"), compte = document.getElementById("compte");
+  indice.addEventListener("input", () => compte.textContent = indice.value.length);
+
+  // Validation locale, sans envoi : 14 caractères minimum (règle de l'entreprise) et mots de passe identiques
+  document.getElementById("f").addEventListener("submit", e => {
+    e.preventDefault();
+    const court = mdp.value.length < 14, diff = mdp.value !== mdp2.value;
+    document.getElementById("g-mdp").classList.toggle("err", court);
+    document.getElementById("e-mdp").classList.toggle("on", court);
+    document.getElementById("g-mdp2").classList.toggle("err", !court && diff);
+    document.getElementById("e-mdp2").classList.toggle("on", !court && diff);
+    document.getElementById("ok").classList.toggle("on", !court && !diff);
+  });
+
+  // Explications (bouton ou touche A)
+  const m = document.getElementById("m"), b = document.getElementById("b-expl");
+  const basculer = () => { const on = m.classList.toggle("expl"); b.setAttribute("aria-pressed", on); };
+  b.addEventListener("click", basculer);
+  addEventListener("keydown", e => { if ((e.key === "a" || e.key === "A") && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) basculer(); });
+})();
+</script>
+</body>
+</html>
