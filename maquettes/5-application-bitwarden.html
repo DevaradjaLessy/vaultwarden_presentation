@@ -9,6 +9,7 @@
    puis connexion avec l'adresse et le mot de passe principal. Rien n'est envoyé. Touche A : afficher ou masquer le guide. */
 :root{
   --bw:#175DDC; --bw-hover:#1A41AC; --text:#1B2029; --muted:#5A6D91; --field:#8D9CB5; --line:#DCE1E8; --danger:#C83522;
+  --volet:#1252A3; --volet-act:#0D3C77;
   --win:#0067C0; --note:#00857B;
 }
 *{box-sizing:border-box}
@@ -134,9 +135,27 @@ label.l .req{color:var(--danger);margin-left:2px}
 .acces b{color:var(--text);font-weight:600}
 .acces svg{width:12px;height:12px}
 
-/* Coffre ouvert, d'après l'application : titre, « + Ajouter », recherche, tableau */
-.coffre{position:relative;display:flex;flex-direction:column;height:100%;padding:20px 24px;background:#fff}
+/* Coffre ouvert, d'après l'application : volet de gauche, puis titre, « + Ajouter », recherche, tableau */
+.coffre{position:relative;display:flex;height:100%;background:#fff}
 .coffre[hidden]{display:none}
+.c-main{flex:1;min-width:0;display:flex;flex-direction:column;padding:20px 24px}
+
+/* Volet de gauche (thème clair) : logo, puis l'arborescence par défaut du coffre */
+.volet{flex:none;width:236px;overflow:auto;padding:16px 10px 12px;background:var(--volet);color:#fff;font-size:13.5px}
+.v-logo{display:flex;align-items:center;gap:8px;padding:2px 10px 14px}
+.v-logo svg{width:24px;height:28px}
+.v-logo span{font-size:27px;line-height:1;letter-spacing:-.01em}
+.v-logo b{font-weight:800}
+.arbo{list-style:none;margin:0;padding:0}
+.arbo li{display:flex;align-items:center;gap:8px;height:27px;margin:1px 0;padding-right:8px;border-radius:8px;white-space:nowrap;cursor:default}
+.arbo li:hover{background:rgba(255,255,255,.1)}
+.arbo li.act{background:var(--volet-act);font-weight:600}
+.arbo .n0{padding-left:8px}
+.arbo .n1{padding-left:28px}
+.arbo .n2{padding-left:48px}
+.arbo .chev{flex:none;width:12px;height:12px}
+.arbo .i{flex:none;width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:900px){.volet{display:none}}
 .c-haut{display:flex;align-items:center;justify-content:space-between}
 .c-haut h2{margin:0;font-size:24px;font-weight:600}
 .c-haut .d{position:relative;display:flex;align-items:center;gap:12px}
@@ -170,6 +189,14 @@ label.l .req{color:var(--danger);margin-left:2px}
 .c-vide{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:50px 20px;color:var(--muted);font-size:14px;text-align:center}
 .c-vide[hidden]{display:none}
 .c-vide svg{width:70px;height:70px;color:#B5C3DA}
+/* Menu « ⋮ » d'une ligne : les choix de l'application, seul « Supprimer » fonctionne */
+.m-opt{position:absolute;z-index:6;min-width:240px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(15,23,32,.18)}
+.m-opt[hidden]{display:none}
+.m-opt button{display:flex;align-items:center;gap:12px;width:100%;padding:9px 12px;border:0;border-radius:8px;background:none;font-size:14px;font-weight:600;color:var(--text);text-align:left;cursor:default}
+.m-opt svg{width:16px;height:16px;color:#3D4A61}
+.m-opt .suppr,.m-opt .suppr svg{color:var(--danger)}
+.m-opt .suppr{cursor:pointer}
+.m-opt .suppr:hover{background:#FCEDEB}
 
 /* Boîte « Ajouter un identifiant » */
 .voile-app{position:absolute;inset:0;z-index:8;display:grid;place-items:center;padding:12px;background:rgba(15,23,32,.35)}
@@ -189,6 +216,7 @@ label.l .req{color:var(--danger);margin-left:2px}
 .ic-btn:hover{background:#EEF1F5}
 .ic-btn svg{width:18px;height:18px}
 .select{display:flex;align-items:center;justify-content:space-between;height:38px;padding:0 12px;border:1px solid var(--field);border-radius:8px;color:var(--muted);font-size:14px}
+.select.plein{color:var(--text)}
 .select svg{width:16px;height:16px}
 .aide{display:flex;align-items:center;gap:4px;margin:6px 0 0;font-size:12px;color:var(--muted)}
 .aide svg{width:13px;height:13px}
@@ -250,6 +278,9 @@ label.l .req{color:var(--danger);margin-left:2px}
     <path d="M144 128H370a10 10 0 0 1 10 10V292c0 60-60 102-124 126-64-24-124-66-124-126V138a10 10 0 0 1 10-10z" fill="#175DDC"/>
     <path d="M258 162h86v124c0 40-38 72-86 92z" fill="#fff"/>
   </symbol>
+  <!-- Flèches du volet : dossier ouvert, dossier fermé -->
+  <symbol id="ch-o" viewBox="0 0 12 12"><path d="M2.5 4h7L6 8.5z" fill="currentColor"/></symbol>
+  <symbol id="ch-f" viewBox="0 0 12 12"><path d="M4 2.5v7L8.5 6z" fill="currentColor"/></symbol>
 </svg>
 
 <nav class="parcours" aria-label="Parcours du jour J">
@@ -304,7 +335,7 @@ label.l .req{color:var(--danger);margin-left:2px}
         <p class="sous">Avec votre adresse professionnelle.</p>
         <form class="formu" id="f-adresse" novalidate>
           <label class="l" for="adr">Adresse électronique<span class="req">*</span></label>
-          <div class="groupe" id="g-adr"><input id="adr" type="email" value="prenom.nom@semac.re"></div>
+          <div class="groupe" id="g-adr"><input id="adr" type="email" value="prenom.nom@entreprise.fr"></div>
           <p class="err-txt" id="x-adr">Entrée requise.</p>
           <label class="coche"><input type="checkbox" checked> Se souvenir de l'adresse électronique</label>
           <button class="btn" type="submit">Continuer</button>
@@ -316,7 +347,7 @@ label.l .req{color:var(--danger);margin-left:2px}
       <div class="ecran connexion" id="e-mdp" hidden>
         <svg class="logo-g" viewBox="0 0 248 290"><use href="#bw-bouclier"/></svg>
         <h1>Connectez-vous à Bitwarden</h1>
-        <p class="sous"><span id="adr-aff">prenom.nom@semac.re</span> · <a href="#" id="pas-vous">Pas vous ?</a></p>
+        <p class="sous"><span id="adr-aff">prenom.nom@entreprise.fr</span> · <a href="#" id="pas-vous">Pas vous ?</a></p>
         <form class="formu" id="f-mdp" novalidate>
           <label class="l" for="mdp">Mot de passe principal<span class="req">*</span></label>
           <div class="groupe" id="g-mdp"><input id="mdp" type="password" autocomplete="off">
@@ -327,8 +358,33 @@ label.l .req{color:var(--danger);margin-left:2px}
         </form>
       </div>
 
-      <!-- 3. Coffre ouvert : « + Ajouter », recherche, tableau -->
+      <!-- 3. Coffre ouvert : volet de gauche, « + Ajouter », recherche, tableau -->
       <div class="ecran coffre" id="e-coffre" hidden>
+        <nav class="volet" aria-label="Filtres du coffre">
+          <div class="v-logo"><svg viewBox="132 128 248 290" aria-hidden="true"><path d="M144 128H370a10 10 0 0 1 10 10V292c0 60-60 102-124 126-64-24-124-66-124-126V138a10 10 0 0 1 10-10z" fill="#fff"/><path d="M258 162h86v124c0 40-38 72-86 92z" fill="#1252A3"/></svg><span><b>bit</b>warden</span></div>
+          <ul class="arbo">
+            <li class="n0"><svg class="chev"><use href="#ch-o"/></svg><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="10" cy="12" r="3"/><path d="M17 10v4"/></svg>Coffre</li>
+            <li class="n1 act"><svg class="chev"><use href="#ch-o"/></svg><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg>Tous les coffres</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Mon Coffre</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><path d="M4 21V5l8-2v18M12 8h8v13M2 21h20M7 8h2M7 12h2M7 16h2M15 12h2M15 16h2"/></svg>Société Exemple</li>
+            <li class="n1 act"><svg class="chev"><use href="#ch-o"/></svg><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg>Tous les éléments</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg>Favoris</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-3 3-3 15 0 18M12 3c3 3 3 15 0 18"/></svg>Identifiant</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>Carte de paiement</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16a3 3 0 0 1 6 0M14 10h4M14 14h3"/></svg>Identité</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4M8 12h8M8 16h5"/></svg>Note sécurisée</li>
+            <li class="n2"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><circle cx="7.5" cy="12" r="4"/><path d="M11.5 12H21M18 12v3M15 12v2"/></svg>Clé SSH</li>
+            <li class="n1"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg>Archive</li>
+            <li class="n1"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>Corbeille</li>
+            <li class="n1"><svg class="chev"><use href="#ch-f"/></svg><svg class="i" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M6 6h12M8 3h8"/></svg>Collections</li>
+            <li class="n1"><svg class="chev"><use href="#ch-f"/></svg><svg class="i" viewBox="0 0 24 24"><path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>Dossiers</li>
+            <li class="n0"><svg class="chev"><use href="#ch-f"/></svg><svg class="i" viewBox="0 0 24 24"><path d="M4 4l17 8-17 8 3-8zM7 12h6"/></svg>Send</li>
+            <li class="n0"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.9-3.5M4 4v4h4M4 13a8 8 0 0 0 14.9 3.5M20 20v-4h-4"/></svg>Générateur</li>
+            <li class="n0"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><path d="M12 15V4M7 8l5-4 5 4M4 20h16"/></svg>Import</li>
+            <li class="n0"><i class="chev"></i><svg class="i" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 4 5-4M4 20h16"/></svg>Export</li>
+          </ul>
+        </nav>
+        <div class="c-main">
         <div class="c-haut"><h2>Coffre</h2>
           <div class="d"><button class="b-ajouter" type="button" id="b-ajouter" aria-haspopup="menu" aria-expanded="false">+ Ajouter</button><span class="avatar" aria-label="Prénom NOM">PN</span>
             <div class="m-ajout" id="m-ajout" role="menu" hidden>
@@ -347,16 +403,28 @@ label.l .req{color:var(--danger);margin-left:2px}
           <div class="c-vide" id="c-vide"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><rect x="10" y="14" width="44" height="38" rx="5"/><circle cx="32" cy="33" r="8"/><path d="M32 25v-3M32 44v-3M24 33h-3M43 33h-3"/></svg>
             Aucun élément dans le coffre pour l'instant.<br>Cliquez sur « + Ajouter » pour ranger votre premier accès.</div>
         </div>
+        </div>
 
+        <div class="m-opt" id="m-opt" role="menu" hidden>
+          <button type="button" role="menuitem" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg>Favori</button>
+          <button type="button" role="menuitem" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m14 6 4 4"/></svg>Édition</button>
+          <button type="button" role="menuitem" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m20 11.5-8.5 8.5a5 5 0 0 1-7-7L13 4.5a3.5 3.5 0 0 1 5 5L9.5 18a2 2 0 0 1-3-3L14 7.5"/></svg>Pièces jointes</button>
+          <button type="button" role="menuitem" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></svg>Cloner</button>
+          <button type="button" role="menuitem" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M6 6h12M8 3h8"/></svg>Assigner aux collections</button>
+          <button type="button" role="menuitem" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg>Archiver</button>
+          <button type="button" role="menuitem" class="suppr" id="m-supprimer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>Supprimer</button>
+        </div>
         <div class="voile-app" id="voile-app" hidden>
           <form class="d-ajout" id="f-ajout" novalidate>
-            <div class="tete"><h3>Ajouter un identifiant</h3><button class="f-ctrl" type="button" id="a-fermer" aria-label="Fermer"><svg viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9" stroke="currentColor" stroke-width="1.4"/></svg></button></div>
+            <div class="tete"><h3 id="a-titre">Ajouter un identifiant</h3><button class="f-ctrl" type="button" id="a-fermer" aria-label="Fermer"><svg viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9" stroke="currentColor" stroke-width="1.4"/></svg></button></div>
             <div class="corps">
               <div class="sec-t">Détails de l'élément <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg></div>
               <div class="sec">
                 <label class="l" for="a-nom">Nom de l'élément<span class="req">*</span></label>
                 <div class="groupe" id="g-a-nom"><input id="a-nom" autocomplete="off"></div>
                 <p class="err-txt" id="x-a-nom">Entrée requise.</p>
+                <div id="a-proprio" hidden><label class="l">Propriétaire</label>
+                  <div class="select plein"><span id="a-proprio-v"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></div></div>
                 <label class="l">Dossier</label>
                 <div class="select">-- Sélectionner --<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></div>
               </div>
@@ -550,8 +618,8 @@ label.l .req{color:var(--danger);margin-left:2px}
     setTimeout(() => { b.classList.remove("charge"); fenetre.classList.add("large"); ecran("e-coffre"); afficherListe(); aller("ajouter"); }, 800);
   });
 
-  // Coffre : « + Ajouter », type d'élément, formulaire, générateur, liste
-  const elements = [], mAjout = $("m-ajout"), voileApp = $("voile-app");
+  // Coffre : « + Ajouter », type d'élément, formulaire (ajout ou modification), générateur, liste, menu « ⋮ »
+  const elements = [], mAjout = $("m-ajout"), mOpt = $("m-opt"), voileApp = $("voile-app");
   const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const IC = {
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-3 3-3 15 0 18M12 3c3 3 3 15 0 18"/></svg>',
@@ -565,32 +633,66 @@ label.l .req{color:var(--danger);margin-left:2px}
   };
   const afficherListe = () => {
     const filtre = sansAccent($("c-q").value);
-    $("t-lignes").innerHTML = elements.filter(e => !filtre || sansAccent(e.nom + " " + e.user).includes(filtre)).map(e =>
-      `<div class="t-ligne"><input type="checkbox" aria-label="Sélectionner"><div class="t-nom">${IC.globe}<span><a href="#" onclick="return false">${esc(e.nom)}</a><small>${esc(e.user)}</small></span></div>` +
+    $("t-lignes").innerHTML = elements.map((e, i) => [e, i]).filter(([e]) => !filtre || sansAccent(e.nom + " " + e.user).includes(filtre)).map(([e, i]) =>
+      `<div class="t-ligne" data-i="${i}"><input type="checkbox" aria-label="Sélectionner"><div class="t-nom">${IC.globe}<span><a href="#" data-action="modifier">${esc(e.nom)}</a><small>${esc(e.user || "—")}</small></span></div>` +
       `<span class="badge">Moi</span><div class="t-opt"><button type="button" data-action="site" aria-label="Ouvrir le site">${IC.lancer}</button>` +
-      `<button type="button" data-action="copier" aria-label="Copier le mot de passe">${IC.copier}</button><button type="button" aria-label="Options">${IC.points}</button></div></div>`).join("");
+      `<button type="button" data-action="copier" aria-label="Copier le mot de passe">${IC.copier}</button><button type="button" data-action="options" aria-label="Options">${IC.points}</button></div></div>`).join("");
     $("c-vide").hidden = elements.length > 0;
   };
   $("c-q").addEventListener("input", afficherListe);
+  // Clic sur le nom : modifier ; « ⋮ » : menu ; les autres boutons de la ligne expliquent ce qu'ils feraient
   $("t-lignes").addEventListener("click", e => {
-    const b = e.target.closest("button[data-action]");
-    if (b) toastApp(b.dataset.action === "copier" ? "Mot de passe copié : collez-le dans la page de connexion du site." : "Le site s'ouvrirait dans votre navigateur.", b.dataset.action !== "copier");
+    const b = e.target.closest("[data-action]");
+    if (!b) return;
+    e.preventDefault();
+    const i = +b.closest(".t-ligne").dataset.i, action = b.dataset.action;
+    if (action === "modifier") ouvrirFormulaire(i);
+    else if (action === "options") ouvrirOptions(b, i);
+    else toastApp(action === "copier" ? "Mot de passe copié : collez-le dans la page de connexion du site." : "Le site s'ouvrirait dans votre navigateur.", action !== "copier");
+  });
+
+  // Menu « ⋮ » : sous le bouton (ou au-dessus s'il n'y a plus de place) ; « Supprimer » envoie l'élément à la corbeille.
+  // k corrige le léger zoom de la fenêtre pendant son ouverture.
+  let courant = null;
+  const ouvrirOptions = (b, i) => {
+    if (!mOpt.hidden && courant === i) { mOpt.hidden = true; return; }
+    courant = i; mOpt.hidden = false;
+    const coffre = $("e-coffre"), c = coffre.getBoundingClientRect(), r = b.getBoundingClientRect(), k = c.width / coffre.offsetWidth;
+    let top = (r.bottom - c.top) / k + 4;
+    if (top + mOpt.offsetHeight > coffre.offsetHeight - 8) top = (r.top - c.top) / k - mOpt.offsetHeight - 4;
+    mOpt.style.left = (r.right - c.left) / k - mOpt.offsetWidth + "px"; mOpt.style.top = top + "px";
+  };
+  fenetre.addEventListener("click", e => { if (!mOpt.hidden && !e.target.closest("#m-opt, [data-action=options]")) mOpt.hidden = true; });
+  $("m-supprimer").addEventListener("click", () => {
+    elements.splice(courant, 1); mOpt.hidden = true; afficherListe();
+    toastApp("Élément envoyé dans la corbeille");
   });
 
   const ouvrirMenu = ouvert => { mAjout.hidden = !ouvert; $("b-ajouter").setAttribute("aria-expanded", ouvert); };
   $("b-ajouter").addEventListener("click", e => { e.stopPropagation(); const o = mAjout.hidden; ouvrirMenu(o); if (!voileApp.hidden) return; aller(o ? "type" : "ajouter"); });
   fenetre.addEventListener("click", e => { if (!mAjout.hidden && !e.target.closest("#m-ajout, #b-ajouter")) { ouvrirMenu(false); if (etape === "type") aller("ajouter"); } });
+  // Formulaire : vide pour « + Ajouter », rempli avec l'élément cliqué pour « Modifier l'identifiant » (propriétaire en plus)
+  let edite = null;
+  const ouvrirFormulaire = i => {
+    edite = i ?? null;
+    const el = edite === null ? {} : elements[edite];
+    $("a-titre").textContent = edite === null ? "Ajouter un identifiant" : "Modifier l'identifiant";
+    $("a-proprio").hidden = edite === null; $("a-proprio-v").textContent = $("adr").value.trim();
+    ["nom", "user", "mdp", "uri", "notes"].forEach(k => $("a-" + k).value = el[k] || "");
+    $("a-totp").value = "";
+    $("a-mdp").type = "password"; $("g-a-nom").classList.remove("err"); $("x-a-nom").classList.remove("on");
+    voileApp.hidden = false; $("b-exemple").hidden = edite !== null; $("a-nom").focus();
+    aller(edite === null ? "nom" : null);
+  };
   mAjout.addEventListener("click", e => {
     const b = e.target.closest("button[data-type]"); if (!b) return;
     ouvrirMenu(false);
     if (b.dataset.type !== "identifiant") { toastApp("Pour la démonstration, choisissez « Identifiant ».", true); aller("ajouter"); return; }
-    ["a-nom", "a-user", "a-mdp", "a-totp", "a-uri", "a-notes"].forEach(id => $(id).value = "");
-    $("a-mdp").type = "password"; $("g-a-nom").classList.remove("err"); $("x-a-nom").classList.remove("on");
-    voileApp.hidden = false; $("b-exemple").hidden = false; $("a-nom").focus(); aller("nom");
+    ouvrirFormulaire();
   });
   const fermerAjout = () => { voileApp.hidden = true; $("b-exemple").hidden = true; };
-  $("a-fermer").addEventListener("click", () => { fermerAjout(); aller("ajouter"); });
-  $("a-annuler").addEventListener("click", () => { fermerAjout(); aller("ajouter"); });
+  $("a-fermer").addEventListener("click", () => { fermerAjout(); aller(edite === null ? "ajouter" : null); });
+  $("a-annuler").addEventListener("click", () => { fermerAjout(); aller(edite === null ? "ajouter" : null); });
 
   // Générateurs : mot de passe de 20 caractères, nom d'utilisateur aléatoire
   const hasard = n => crypto.getRandomValues(new Uint32Array(1))[0] % n;
@@ -618,18 +720,20 @@ label.l .req{color:var(--danger);margin-left:2px}
     suite();
   }));
   $("b-exemple").addEventListener("click", () => {
-    $("a-nom").value = "Portail fournisseur"; $("a-user").value = "prenom.nom"; $("a-uri").value = "https://portail.exemple.re";
+    $("a-nom").value = "Portail fournisseur"; $("a-user").value = "prenom.nom"; $("a-uri").value = "https://portail.exemple.fr";
     $("g-a-nom").classList.remove("err"); $("x-a-nom").classList.remove("on"); suite();
   });
 
-  // Enregistrer : le nom est obligatoire, puis la ligne arrive dans le tableau
+  // Enregistrer : le nom est obligatoire, puis la ligne arrive (ou change) dans le tableau
   $("f-ajout").addEventListener("submit", e => {
     e.preventDefault();
     const nom = $("a-nom").value.trim();
     $("g-a-nom").classList.toggle("err", !nom); $("x-a-nom").classList.toggle("on", !nom);
     if (!nom) { $("a-nom").focus(); return; }
-    elements.unshift({ nom, user: $("a-user").value.trim() || "—" });
+    const el = { nom, user: $("a-user").value.trim(), mdp: $("a-mdp").value, uri: $("a-uri").value.trim(), notes: $("a-notes").value };
+    if (edite === null) elements.unshift(el); else elements[edite] = el;
     fermerAjout(); $("c-q").value = ""; afficherListe();
+    if (edite !== null) { toastApp("Élément modifié"); return; }
     toastApp("Élément ajouté");
     $("fin").hidden = false; aller(null);
   });

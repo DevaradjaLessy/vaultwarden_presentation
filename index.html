@@ -166,16 +166,37 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
 
 /* ── 5. La solution : Vaultwarden, hébergé chez nous ── */
 .solution .glow{--gx0:700px;--gy0:-200px;--gx:600px;--gy:-120px}
-.sol-row{display:grid;grid-template-columns:1fr 150px 1fr;align-items:stretch;margin-top:52px;position:relative;z-index:2}
-.sol{padding:36px 40px 34px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(180deg,#FFFFFF,#F4F7FA);box-shadow:0 24px 50px rgba(15,23,32,.07)}
-.sol .sol-ic{width:72px;height:72px;color:var(--accent)}
-.sol .tag{display:block;margin-top:20px}
-.sol h3{margin:8px 0 0;font:800 56px/1 var(--f-title);letter-spacing:-.01em}
-.sol ul{margin:20px 0 0;padding:0;list-style:none}
-.sol li{display:flex;gap:14px;align-items:flex-start;margin-top:12px;font:400 28px/1.35 var(--f-body);color:var(--soft)}
-.sol li svg{flex:none;width:26px;height:26px;margin-top:4px;color:var(--accent)}
-.sol-lien{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font:600 20px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase}
-.sol-lien svg{width:96px;height:44px;color:var(--accent)}
+/* Boucle de 4 s : le cadenas n° k part avec un retard de k × 4 s / n (n = cadenas sur la voie), délais négatifs = déjà en régime */
+.sync{--n:3;display:grid;grid-template-columns:400px 1fr 540px;align-items:start;margin-top:52px;position:relative;z-index:2}
+.pole{display:flex;flex-direction:column;align-items:center;text-align:center}
+.pole .tag{margin-top:34px}
+.pole h3{margin:10px 0 0;font:800 56px/1 var(--f-title);letter-spacing:-.01em}
+.srv{display:block;width:220px;height:290px;filter:drop-shadow(0 24px 30px rgba(15,23,32,.08))}
+.srv .led{animation:blink 2.4s ease-in-out infinite calc(var(--k) * -.8s)}
+.voies{display:flex;flex-direction:column;justify-content:center;gap:24px;height:290px;padding:0 36px}
+.voie{position:relative;height:52px}
+.voie::before{content:"";position:absolute;left:0;right:0;top:25px;height:3px;opacity:.5;
+  background:repeating-linear-gradient(90deg,var(--accent) 0 14px,transparent 14px 28px)}
+.voie.retour{--n:2}
+.cadenas{position:absolute;top:0;left:calc(50% - 26px);width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  background:#FFFFFF;border:2px solid var(--accent);color:var(--accent);box-shadow:0 0 22px rgba(0,133,123,.18);
+  animation:trajet 4s linear infinite calc(var(--k) * 4s / var(--n) - 4s)}
+.voie.retour .cadenas{animation-direction:reverse}
+@keyframes trajet{0%{left:0;opacity:0}12%,88%{opacity:1}100%{left:calc(100% - 52px);opacity:0}}
+.pc{display:flex;flex-direction:column;width:540px;height:290px}
+.ecran{flex:1;width:480px;margin:0 auto;padding:14px;border-radius:22px 22px 0 0;background:#1E2733;box-shadow:0 30px 60px rgba(15,23,32,.12)}
+.bw{display:flex;flex-direction:column;height:100%;border-radius:8px;overflow:hidden;background:#FFFFFF;text-align:left}
+.bw-barre{display:flex;align-items:center;gap:12px;height:52px;padding:0 20px;background:#175DDC;color:#FFFFFF;font:700 24px/1 var(--f-body)}
+.bw-barre svg{width:30px;height:30px}
+/* Même durée et même délai que le cadenas n° k de la voie du haut : la ligne s'allume à son arrivée */
+.bw-ligne{flex:1;display:flex;align-items:center;gap:18px;padding:0 22px 0 18px;border-top:1px solid var(--line);border-left:4px solid transparent;
+  font:500 24px/1 var(--f-body);color:var(--text);animation:allume 4s linear infinite calc(var(--k) * 4s / var(--n) - 4s)}
+.bw-ligne i{flex:none;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);
+  font:600 17px/1 var(--f-body);font-style:normal;color:var(--soft)}
+.bw-ligne em{margin-left:auto;font:700 20px/1 var(--f-body);font-style:normal;letter-spacing:.18em;color:#A7B2BE}
+@keyframes allume{0%,6%,100%{background:var(--accent-dim);border-left-color:var(--accent)}18%,90%{background:transparent;border-left-color:transparent}}
+.socle{position:relative;height:22px;border-radius:4px 4px 20px 20px;background:linear-gradient(180deg,#EEF2F6,#D3DAE2);box-shadow:0 24px 40px rgba(15,23,32,.1)}
+.socle::before{content:"";position:absolute;left:50%;top:0;width:110px;height:8px;margin-left:-55px;border-radius:0 0 8px 8px;background:#C9D2DC}
 .solution .banner{margin-top:auto}
 
 /* ── 5 bis. Solide ou pas ? (exercice, un verdict par clic) ── */
@@ -229,6 +250,16 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
 .honest{margin:0;padding:24px 30px;border:1px solid var(--line);border-left:6px solid #A7B2BE;border-radius:14px;background:#F6F8FA;
   font:400 29px/1.35 var(--f-body);color:var(--soft)}
 .honest b{color:var(--text);font-weight:700}
+/* L'application est connectée ; hors du réseau, sa copie tient 30 jours */
+.etat{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:8px 18px;border-radius:999px;background:var(--accent-dim);
+  font:600 22px/1 var(--f-body);color:var(--accent)}
+.etat i{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent-glow);animation:blink 2.4s ease-in-out infinite}
+.trente{display:flex;align-items:center;gap:28px}
+.trente p{margin:0}
+.trente strong{white-space:nowrap}
+.j30{flex:none;width:110px;padding:14px 0 12px;border:2px solid rgba(0,133,123,.45);border-radius:18px;background:#FFFFFF;text-align:center;color:var(--accent)}
+.j30 b{display:block;font:800 58px/.9 var(--f-title)}
+.j30 span{display:block;margin-top:6px;font:600 16px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase}
 
 .caret{display:inline-block;width:4px;height:60px;background:var(--accent);box-shadow:0 0 12px var(--accent-glow);animation:blink 1.1s steps(1) infinite}
 
@@ -369,7 +400,10 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
 @media (prefers-reduced-motion: reduce){
   .slide,.slide.active,.slide .a,.slide .pop,.slide .step,.slide .glow,.vault .wheel,.chip,.bigkey,.safe .sdial,.drawer.mine{transition:none!important;animation:none!important}
   .slide .a,.slide .pop{opacity:1;transform:none}
-  .vault .dial,.vault .led,.caret,.wire,.packet,.hand-ico svg{animation:none!important}
+  .vault .dial,.vault .led,.caret,.wire,.packet,.hand-ico svg,.etat i{animation:none!important}
+  /* Diapo 5 : ni trajet ni clignotement, un seul cadenas immobile au milieu de chaque voie */
+  .srv .led,.cadenas,.bw-ligne{animation:none!important}
+  .cadenas~.cadenas{display:none}
 }
 @media print{
   @page{size:1920px 1080px;margin:0}
@@ -390,6 +424,9 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   .qz:has(.non){border-color:rgba(214,59,47,.45)}
   .qz:has(.oui){border-color:rgba(0,133,123,.55)}
   .packet{animation:none;left:calc(100% / 3)}
+  .etat i{animation:none}
+  .srv .led,.cadenas,.bw-ligne{animation:none}
+  .cadenas~.cadenas{display:none}
   .chrome{display:none}
 }
 </style>
@@ -403,7 +440,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   <div class="cover-text">
     <p class="kicker a">20 minutes SI · la solution Vaultwarden</p>
     <h1 class="a" style="--d:1">Un seul mot de passe à retenir<span class="dot">.</span></h1>
-    <p class="lead a" style="--d:2">Le coffre-fort de mots de passe arrive <span data-anon="dans l'entreprise">à la SEMAC</span>. Voici ce qui va changer pour vous.</p>
+    <p class="lead a" style="--d:2">Le coffre-fort de mots de passe arrive dans l'entreprise. Voici ce qui va changer pour vous.</p>
     <div class="byline a" style="--d:3"><span class="pill">Équipe informatique</span>Dévaradja Lessy</div>
   </div>
   <svg class="vault a" id="vault-src" style="--d:2" viewBox="0 0 600 600" aria-hidden="true">
@@ -531,23 +568,44 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   <div class="glow"></div>
   <p class="kicker a">01 · Qu'est-ce que c'est&nbsp;?</p>
   <h2 class="title a" style="--d:1">La solution&nbsp;: Vaultwarden, hébergé chez nous.</h2>
-  <div class="sol-row">
-    <div class="sol a" style="--d:2"><svg class="sol-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M11 6.5h6M11 17.5h6"/></svg>
+  <!-- Le serveur et l'application : les cadenas circulent entre les deux, chaque arrivée allume une ligne de la fenêtre -->
+  <div class="sync">
+    <div class="pole a" style="--d:2">
+      <svg class="srv" viewBox="0 0 220 290" aria-hidden="true">
+        <rect x="10" y="4" width="200" height="266" rx="24" fill="#FFFFFF" stroke="#D3DAE2" stroke-width="4"/>
+        <g fill="#EEF2F6" stroke="#D3DAE2" stroke-width="2">
+          <rect x="32" y="29" width="156" height="64" rx="12"/><rect x="32" y="105" width="156" height="64" rx="12"/><rect x="32" y="181" width="156" height="64" rx="12"/>
+        </g>
+        <path d="M52 54h68M52 68h44M52 130h68M52 144h44M52 206h68M52 220h44" stroke="#C9D2DC" stroke-width="5" stroke-linecap="round"/>
+        <circle class="led" style="--k:0" cx="164" cy="61" r="7" fill="#00857B"/>
+        <circle class="led" style="--k:1" cx="164" cy="137" r="7" fill="#00857B"/>
+        <circle class="led" style="--k:2" cx="164" cy="213" r="7" fill="#00857B"/>
+        <rect x="40" y="268" width="34" height="16" rx="4" fill="#D3DAE2"/><rect x="146" y="268" width="34" height="16" rx="4" fill="#D3DAE2"/>
+      </svg>
       <span class="tag">Le serveur</span><h3>Vaultwarden</h3>
-      <ul>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Installé sur nos serveurs, <span data-anon="dans l'entreprise">à la SEMAC</span>.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Sauvegardé chaque jour.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Logiciel libre, compatible Bitwarden.</span></li>
-      </ul>
     </div>
-    <div class="sol-lien a" style="--d:3"><svg viewBox="0 0 96 44" aria-hidden="true"><path d="M8 14h76m-10-9 10 9-10 9M88 30H12m10-9-10 9 10 9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>chiffré</div>
-    <div class="sol a" style="--d:4"><svg class="sol-ic" viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="90" fill="#175DDC"/><path d="M144 128H370a10 10 0 0 1 10 10V292c0 60-60 102-124 126-64-24-124-66-124-126V138a10 10 0 0 1 10-10z" fill="#fff"/><path d="M258 162h86v124c0 40-38 72-86 92z" fill="#175DDC"/></svg>
+    <div class="voies a" style="--d:3" aria-hidden="true">
+      <div class="voie">
+        <span class="cadenas" style="--k:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <span class="cadenas" style="--k:1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <span class="cadenas" style="--k:2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      </div>
+      <div class="voie retour">
+        <span class="cadenas" style="--k:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <span class="cadenas" style="--k:1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      </div>
+    </div>
+    <div class="pole a" style="--d:4">
+      <div class="pc">
+        <div class="ecran"><div class="bw">
+          <div class="bw-barre"><svg viewBox="0 0 512 512" aria-hidden="true"><rect width="512" height="512" rx="90" fill="#175DDC"/><path d="M144 128H370a10 10 0 0 1 10 10V292c0 60-60 102-124 126-64-24-124-66-124-126V138a10 10 0 0 1 10-10z" fill="#fff"/><path d="M258 162h86v124c0 40-38 72-86 92z" fill="#175DDC"/></svg>Bitwarden</div>
+          <div class="bw-ligne" style="--k:0"><i>P</i>Portail fournisseur<em>••••••••</em></div>
+          <div class="bw-ligne" style="--k:1"><i>L</i>Logiciel comptable<em>••••••••</em></div>
+          <div class="bw-ligne" style="--k:2"><i>W</i>Wazo<em>••••••••</em></div>
+        </div></div>
+        <div class="socle"></div>
+      </div>
       <span class="tag">L'application</span><h3>Bitwarden</h3>
-      <ul>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Installée sur votre poste.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>C'est elle que vous ouvrirez chaque jour.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>C'est le nom que vous verrez à l'écran.</span></li>
-      </ul>
     </div>
   </div>
   <p class="banner a" style="--d:5"><strong>Vos mots de passe restent chez nous.</strong> Ils ne partent pas chez un éditeur extérieur.</p>
@@ -627,23 +685,25 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
     <div class="packet a" style="--d:4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-scramble="10">x9#Qe!2vKp</span></div>
     <div class="node lock a" style="--d:2">
       <div class="ic"><svg width="84" height="84" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="10" width="64" height="44" rx="6"/><path d="M28 70h24M40 54v16"/><rect x="31" y="31" width="18" height="14" rx="3"/><path d="M34.5 31v-4a5.5 5.5 0 0 1 11 0v4"/></svg></div>
-      <h3>Votre poste</h3>
-      <p>Le coffre est <b style="color:var(--accent)">chiffré</b> ici, rendu illisible, avec votre clé.</p>
+      <h3>Votre application</h3>
+      <p>Elle ferme tout à clé, ici, avant l'envoi.</p>
+      <span class="etat"><i></i>Connectée</span>
     </div>
     <div class="node a" style="--d:3">
       <div class="ic"><svg width="84" height="84" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><circle cx="40" cy="40" r="28"/><path d="M12 40h56M40 12c-11 9-11 47 0 56M40 12c11 9 11 47 0 56"/></svg></div>
       <h3>Le réseau</h3>
-      <p>Ne voit passer que de l'illisible.</p>
+      <p>Celui de l'entreprise&nbsp;: il ne voit passer que de l'illisible.</p>
     </div>
     <div class="node lock a" style="--d:4">
       <div class="ic"><svg width="84" height="84" viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="12" width="56" height="20" rx="4"/><rect x="12" y="40" width="56" height="20" rx="4"/><circle cx="23" cy="22" r="2.5" fill="currentColor"/><circle cx="23" cy="50" r="2.5" fill="currentColor"/><path d="M40 60v8M26 70h28"/></svg></div>
       <h3>Le serveur</h3>
-      <p>L'ordinateur central&nbsp;: il ne garde que des coffres fermés, sauvegardés chaque jour.</p>
+      <p>Il garde le coffre fermé, sauvegardé chaque jour.</p>
     </div>
   </div>
   <div class="cipher-row">
-    <p class="banner a" style="--d:5"><strong>Comme une consigne de gare</strong> : elle garde la valise, sans la clé du cadenas. Votre mot de passe principal, personne ne le connaît.</p>
-    <p class="honest step"><b>Ce que vous rangez dans l'espace de l'entreprise lui appartient</b>, comme un dossier partagé&nbsp;: les administrateurs du coffre y ont accès. Accès pros uniquement&nbsp;: ni banque, ni réseaux sociaux.</p>
+    <div class="banner trente a" style="--d:5"><div class="j30"><b>30</b><span>jours</span></div>
+      <p><strong>Hors du réseau de l'entreprise</strong>, l'application garde une copie fermée à clé. <strong>Reconnectez-vous avant 30 jours</strong>, sinon elle l'efface. Rien n'est perdu&nbsp;: tout reste sur le serveur.</p></div>
+    <p class="honest step"><b>L'espace de l'entreprise lui appartient</b>&nbsp;: les administrateurs du coffre y ont accès. Accès pros uniquement&nbsp;: ni banque, ni réseaux sociaux.</p>
   </div>
   <aside class="notes"><h4>5:45 → 7:00 · Chiffré sur votre poste</h4>
     <p>Le mot important, c'est <b>chiffré</b> : rendu illisible. Et c'est fait <b>sur votre poste</b>, avant que rien ne parte.</p>
@@ -686,7 +746,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   <h2 class="title a" style="--d:1">Fini les mots de passe envoyés par Teams.</h2>
   <div class="cab-grid">
     <div class="armoire a" style="--d:2">
-      <div class="top"><span>Organisation <span data-anon="">SEMAC</span></span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+      <div class="top"><span>Organisation</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
       <div class="drawer mine"><span class="handle"></span>Votre service<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7.5" cy="12" r="4"/><path d="M11.5 12H21M18 12v3M15 12v2"/></svg></div>
       <div class="drawer"><span class="handle"></span>Comptabilité<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
       <div class="drawer"><span class="handle"></span>Gestion locative<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
@@ -713,13 +773,13 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   <h2 class="title a" style="--d:1">Le jour J, en 4 étapes.</h2>
   <div class="tl">
     <div class="tl-line"><i></i></div>
-    <div class="tl-item step"><div class="n">1</div><h3>L'invitation</h3><p>Un mail de «&nbsp;<span data-anon="vaultwarden@…">vaultwarden@semac.re</span>&nbsp;». Ouvrez-le <b>vite</b> : le lien expire. Un doute&nbsp;? Demandez-nous.</p></div>
+    <div class="tl-item step"><div class="n">1</div><h3>L'invitation</h3><p>Un mail de «&nbsp;<span data-anon="vaultwarden@…">vaultwarden@entreprise.fr</span>&nbsp;». Ouvrez-le <b>vite</b> : le lien expire. Un doute&nbsp;? Demandez-nous.</p></div>
     <div class="tl-item step"><div class="n">2</div><h3>Votre clé</h3><p>Le mot de passe principal&nbsp;: <b>14 caractères</b> ou plus.</p></div>
     <div class="tl-item step"><div class="n">3</div><h3>Rejoindre l'organisation</h3><p>L'équipe confirme, parfois en vous faisant lire votre <b>phrase d'empreinte</b> : des mots affichés, pas un secret.</p></div>
     <div class="tl-item step"><div class="n">4</div><h3>Votre filet de sécurité</h3><p>La récupération de compte&nbsp;: en cas d'oubli, l'équipe vous redonne l'accès.</p></div>
   </div>
   <aside class="notes"><h4>9:00 → 10:15 · Les 4 étapes</h4>
-    <p>Un clic par étape. Le jour où vous recevez l'invitation, faites-le <b>tout de suite</b> : le lien expire. ⚠️ L'expéditeur est vaultwarden@semac.re ; donner le jour d'envoi&nbsp;; un doute sur un mail&nbsp;: on nous écrit avant de cliquer.</p>
+    <p>Un clic par étape. Le jour où vous recevez l'invitation, faites-le <b>tout de suite</b> : le lien expire. ⚠️ L'expéditeur est vaultwarden@entreprise.fr ; donner le jour d'envoi&nbsp;; un doute sur un mail&nbsp;: on nous écrit avant de cliquer.</p>
     <p>On vous proposera l'extension de navigateur&nbsp;: cliquez sur «&nbsp;<b>Ajoutez-la plus tard</b>&nbsp;».</p>
     <p>À l'étape 3, l'équipe informatique peut vous demander de <b>lire votre phrase d'empreinte</b> : quelques mots affichés à l'écran, qui ne sont pas un secret. C'est la preuve que c'est bien vous. Jamais votre mot de passe, jamais un code.</p>
     <p>L'étape 4, c'est votre filet de sécurité&nbsp;: si vous oubliez votre mot de passe principal, on pourra le réinitialiser (demande dans FreshService). Puis vous vous connectez sur l'application du poste. Tout est dans le guide, avec un mémo à cocher en dernière page.</p>
@@ -745,7 +805,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
     <svg class="fl a" style="--d:3" viewBox="0 0 48 24" aria-hidden="true"><path d="M2 12h40m-9-8 9 8-9 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <div class="pas a" style="--d:4"><span class="pas-n">3</span>
       <svg class="ill" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
-      <h3>La récupération du compte</h3><p>Les 3 petits points à côté de SEMAC, puis «&nbsp;Faire confiance&nbsp;».</p></div>
+      <h3>La récupération du compte</h3><p>Les 3 petits points à côté du nom de l'entreprise, puis «&nbsp;Faire confiance&nbsp;».</p></div>
   </div>
   <div class="live-bas">
     <div class="consignes a" style="--d:5">

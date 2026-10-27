@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vaultwarden · S'inscrire à la récupération du compte (maquette de formation)</title>
 <style>
-/* Maquette du coffre Vaultwarden (thème clair) : inscription à la récupération du compte par le menu ⋮ de l'organisation,
-   puis confiance envers l'organisation (phrase d'empreinte FICTIVE). Rien n'est envoyé. Touche A : afficher ou masquer le guide. */
+/* Maquette du coffre Vaultwarden (thème clair) : d'abord la page « extension de navigateur » (on choisit « Ajoutez-la plus tard »),
+   puis inscription à la récupération du compte par le menu ⋮ de l'organisation, et confiance envers l'organisation
+   (phrase d'empreinte FICTIVE). Rien n'est envoyé. Touche A : afficher ou masquer le guide. */
 :root{
   --bg:#F3F6F9; --card:#FFFFFF; --line:#DCE1E8; --field:#8D9CB5; --text:#1B2029; --muted:#5A6D91;
   --primary:#175DDC; --primary-hover:#1A41AC; --nav:#175DDC; --danger:#C83522; --warn-bg:#FFF4E0; --warn-line:#E0A132; --warn-text:#7A4600;
@@ -125,6 +126,44 @@ label.l .req{color:var(--danger);margin-left:2px}
 .btn.charge .tourne{display:inline-block}
 @keyframes tourne{to{transform:rotate(360deg)}}
 
+/* Page « extension de navigateur » (après la création du compte), en grande fenêtre par-dessus le coffre */
+.voile-ext{position:fixed;inset:0;z-index:25;display:grid;place-items:center;padding:56px 16px 16px;background:rgba(15,23,32,.38)}
+.voile-ext[hidden]{display:none}
+.ext{position:relative;isolation:isolate;width:min(980px,100%);max-height:calc(100vh - 80px);overflow:auto;padding:24px 30px 22px;border-radius:14px;
+  background:#F6F8FB;box-shadow:0 30px 80px rgba(15,23,32,.35);text-align:center}
+.ext-logo{display:flex;align-items:center;font-size:24px;letter-spacing:-.01em}
+.ext-logo svg{width:30px;height:30px}
+.ext h2{margin:14px 0 8px;font-size:24px;font-weight:600}
+.ext .sous{margin:0 0 24px;font-size:15px;color:#3D4A61}
+.ext-cartes{display:grid;grid-template-columns:repeat(3,220px);justify-content:center;gap:26px}
+.ext-c{position:relative;height:250px;padding:24px 18px 0;border-radius:8px;overflow:hidden}
+.ext-c b{display:block;margin-bottom:16px;font-size:15px;font-weight:600}
+.ext-c1{background:#fff;border-top:5px solid var(--primary);box-shadow:0 6px 18px rgba(15,23,32,.1)}
+.ext-c2{background:#D9E3F5}
+.ext-c3{background:#E8EDF8;color:#A3B0C6}
+.ext-pan{padding:16px 14px;border-radius:6px;background:#F1F4F9}
+.ext-c3 .ext-pan{background:transparent}
+.ext-champ{display:flex;align-items:center;justify-content:space-between;height:22px;margin-bottom:8px;padding:0 6px;border:1px solid #B5C0D2;border-radius:4px;
+  background:#fff;font-size:9px;letter-spacing:1px;color:#5A6D91;overflow:hidden}
+.ext-c3 .ext-champ{border-color:#D3DBEA;color:#C3CCDC}
+.ext-champ svg{width:11px;height:13px}
+.ext-bout{height:20px;margin-top:12px;border-radius:3px;background:var(--primary);color:#fff;font-size:10px;font-weight:600;line-height:20px}
+.ext-c3 .ext-bout{background:#CDD6E7;color:#E8EDF8}
+.ext-c2 .barre{position:absolute;left:-30px;right:14px;top:22px;height:22px;border-radius:11px;background:#EEF3FB}
+.ext-c2 .page{position:absolute;left:-30px;right:30px;top:54px;bottom:-12px;border-radius:6px;background:#E8EEF9;box-shadow:0 6px 16px rgba(23,93,220,.12)}
+.ext-c2 .bw{position:absolute;right:18px;top:22px;display:grid;place-items:center;width:22px;height:22px;border-radius:4px;background:#C9D7F2}
+.ext-c2 .bw svg{width:11px;height:13px}
+.ext-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:24px}
+.ext-get{height:40px;padding:0 22px;border:0;border-radius:999px;background:var(--primary);color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.ext-get:hover{background:var(--primary-hover)}
+.ext-plus-tard{padding:6px 10px;border:0;border-radius:8px;background:none;color:var(--primary);font-size:15px;font-weight:700;cursor:pointer}
+.ext-plus-tard:hover{background:#E4ECFA}
+.ext-pied{margin:28px 0 0;font-size:13px;line-height:1.5}
+.ext-pied small{display:block;margin-top:14px;font-size:11.5px;color:#3D4A61}
+.ext-deco{position:absolute;bottom:0;z-index:-1;fill:none;stroke:#D3DBE6;stroke-width:2;pointer-events:none}
+.ext-deco.gauche{left:0;width:260px}
+.ext-deco.droite{right:0;width:220px}
+
 /* Notification */
 .toast{position:fixed;right:20px;top:58px;z-index:40;display:flex;align-items:center;gap:10px;max-width:420px;padding:14px 16px;border-radius:10px;
   background:#fff;border:1px solid var(--line);border-left:6px solid #017E45;box-shadow:0 12px 28px rgba(15,23,32,.16);font-size:15px}
@@ -149,11 +188,19 @@ label.l .req{color:var(--danger);margin-left:2px}
 .outils span{padding:6px 10px;border-radius:999px;background:#FFF4D6;color:#7A5200;border:1px solid #F0D58C}
 .outils button{padding:6px 12px;border:1px solid var(--note);border-radius:999px;background:#fff;color:var(--note);font-size:12px;font-weight:600;cursor:pointer}
 .outils button[aria-pressed=true]{background:var(--note);color:#fff}
-@media (max-width:980px){.app{grid-template-columns:1fr}.nav-app{display:none}.grille{grid-template-columns:1fr}}
+@media (max-width:980px){.app{grid-template-columns:1fr}.nav-app{display:none}.grille{grid-template-columns:1fr}
+  .ext-cartes{grid-template-columns:220px}.ext-c2,.ext-c3,.ext-deco{display:none}}
 @media (prefers-reduced-motion: reduce){.cible,.btn .tourne{animation:none}}
 </style>
 </head>
 <body>
+<!-- Bouclier Bitwarden, réutilisé dans la page « extension de navigateur » -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bw-bouclier" viewBox="132 128 248 290">
+    <path d="M144 128H370a10 10 0 0 1 10 10V292c0 60-60 102-124 126-64-24-124-66-124-126V138a10 10 0 0 1 10-10z" fill="#175DDC"/>
+    <path d="M258 162h86v124c0 40-38 72-86 92z" fill="#fff"/>
+  </symbol>
+</svg>
 <nav class="parcours" aria-label="Parcours du jour J">
   <span class="p-titre">Parcours du jour J</span>
   <a href="1-mail-invitation.html"><b>1</b>Le mail d'invitation</a><span class="p-fl">›</span>
@@ -189,8 +236,8 @@ label.l .req{color:var(--danger);margin-left:2px}
         <label class="f-rech"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input placeholder="Rechercher une organisation" aria-label="Rechercher une organisation"></label>
         <div class="f-org">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 21V5l8-2v18M12 8h8v13M2 21h20M7 8h2M7 12h2M7 16h2M15 12h2M15 16h2"/></svg>
-          <a href="#" onclick="return false">SEMAC</a>
-          <button class="points" id="points" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Options de l'organisation SEMAC">
+          <a href="#" onclick="return false">Société Exemple</a>
+          <button class="points" id="points" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Options de l'organisation Société Exemple">
             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg></button>
           <div class="menu" id="menu" role="menu" hidden>
             <button type="button" role="menuitem" id="m-recup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7.5" cy="12" r="4"/><path d="M11.5 12H21M18 12v3M15 12v2"/></svg><span id="m-recup-txt">S'inscrire à la récupération du compte</span></button>
@@ -219,6 +266,31 @@ label.l .req{color:var(--danger);margin-left:2px}
   </section>
 </div>
 
+<!-- Page « extension de navigateur », affichée après la création du compte : on choisit « Ajoutez-la plus tard » -->
+<div class="voile-ext" id="voile-ext">
+  <div class="ext" role="dialog" aria-modal="true" aria-labelledby="t-ext">
+    <svg class="ext-deco gauche" viewBox="0 0 260 160" aria-hidden="true"><rect x="10" y="40" width="150" height="100" rx="6"/><path d="M0 150h180M85 40v100M10 90h150"/>
+      <circle cx="47" cy="60" r="9"/><path d="M30 86a17 17 0 0 1 34 0"/><circle cx="122" cy="110" r="9"/><path d="M105 136a17 17 0 0 1 34 0"/>
+      <circle cx="215" cy="112" r="14"/><circle cx="215" cy="112" r="26" stroke-dasharray="8 6"/></svg>
+    <svg class="ext-deco droite" viewBox="0 0 220 160" aria-hidden="true"><circle cx="150" cy="112" r="52"/><circle cx="150" cy="112" r="36"/><path d="M138 124l24-24M146 100h16v16"/>
+      <circle cx="40" cy="122" r="10"/><circle cx="70" cy="82" r="6"/><circle cx="20" cy="72" r="6"/><path d="M45 113 67 87M36 112 22 78"/></svg>
+    <div class="ext-logo" role="img" aria-label="Vaultwarden"><svg viewBox="0 0 32 32" fill="none" stroke="#1B2029" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="16" r="12"/><path d="M10 11l6 11 6-11M16 1.5v3M16 27.5v3M1.5 16h3M27.5 16h3M5.7 5.7l2.1 2.1M24.2 24.2l2.1 2.1M5.7 26.3l2.1-2.1M24.2 7.8l2.1-2.1"/></svg><span aria-hidden="true">aultwarden</span></div>
+    <h2 id="t-ext">Remplissez vos mots de passe en toute sécurité, en un clic</h2>
+    <p class="sous">Installez l'extension de navigateur Bitwarden et commencez dès aujourd'hui le remplissage automatique</p>
+    <div class="ext-cartes" aria-hidden="true">
+      <div class="ext-c ext-c1"><b>Créer un compte</b>
+        <div class="ext-pan"><div class="ext-champ">••••••••••••••••••</div><div class="ext-champ">••••••••••••••••••<svg><use href="#bw-bouclier"/></svg></div><div class="ext-bout">Se connecter</div></div></div>
+      <div class="ext-c ext-c2"><span class="barre"></span><span class="bw"><svg><use href="#bw-bouclier"/></svg></span><span class="page"></span></div>
+      <div class="ext-c ext-c3"><b>Se connecter</b>
+        <div class="ext-pan"><div class="ext-champ">••••••••••••</div><div class="ext-champ">••••••••<svg><use href="#bw-bouclier"/></svg></div><div class="ext-bout">Se connecter</div></div></div>
+    </div>
+    <div class="ext-actions"><button class="ext-get" type="button" id="b-extension">Obtenir l'extension</button>
+      <button class="ext-plus-tard" type="button" id="b-plus-tard">Ajoutez-la plus tard</button></div>
+    <p class="ext-pied">Vaultwarden Web<br>2026.2.0
+      <small>Une version modifiée du coffre web Bitwarden® pour Vaultwarden (une réécriture non officielle du serveur Bitwarden®).<br>Vaultwarden n'est associé ni au projet Bitwarden®, ni à Bitwarden Inc.</small></p>
+  </div>
+</div>
+
 <div class="voile" id="voile" hidden>
   <div class="dialog" id="d-recup" role="dialog" aria-modal="true" aria-labelledby="t-recup" hidden>
     <div class="d-tete"><h2 id="t-recup">S'inscrire à la récupération du compte</h2>
@@ -236,7 +308,7 @@ label.l .req{color:var(--danger);margin-left:2px}
   </div>
 
   <div class="dialog" id="d-confiance" role="dialog" aria-modal="true" aria-labelledby="t-confiance" hidden>
-    <div class="d-tete"><h2 id="t-confiance">Faire confiance à l'organisation<small>SEMAC</small></h2>
+    <div class="d-tete"><h2 id="t-confiance">Faire confiance à l'organisation<small>Société Exemple</small></h2>
       <button class="fermer" type="button" data-fermer aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
     <div class="d-corps">
       <p>Cette organisation a une politique de sécurité Entreprise qui vous inscrira dans la récupération de votre compte. L'inscription permettra aux administrateurs de l'organisation de changer votre mot de passe. Continuez seulement si vous reconnaissez cette organisation et que la phrase d'empreinte affichée ci-dessous correspond à l'empreinte de l'organisation.</p>
@@ -255,11 +327,12 @@ label.l .req{color:var(--danger);margin-left:2px}
   const $ = id => document.getElementById(id);
   const points = $("points"), menu = $("menu"), voile = $("voile"), dRecup = $("d-recup"), dConf = $("d-confiance");
   const mdp = $("r-mdp"), coach = $("coach");
-  let inscrit = false, etape = "points";
+  let inscrit = false, etape = "extension";
 
   // Guide : une bulle à côté du prochain élément à cliquer
   const guides = {
-    points: { cible: () => points, txt: "Cliquez sur les <b>3 petits points</b> à côté de SEMAC." },
+    extension: { cible: () => $("b-plus-tard"), txt: "Cliquez sur <b>« Ajoutez-la plus tard »</b> : nous n'utiliserons pas l'extension de navigateur." },
+    points: { cible: () => points, txt: "Cliquez sur les <b>3 petits points</b> à côté de « Société Exemple »." },
     menu: { cible: () => $("m-recup"), txt: "Cliquez sur <b>« S'inscrire à la récupération du compte »</b>." },
     mdp: { cible: () => $("g-mdp"), ancre: () => dRecup, txt: "Tapez votre <b>mot de passe principal</b> (ici, n'importe quel texte), puis <b>« Soumettre »</b>." },
     confiance: { cible: () => $("b-confiance"), ancre: () => dConf, txt: "Vérifiez la <b>phrase d'empreinte</b> avec celle que donne l'équipe informatique, puis cliquez sur <b>« Faire confiance »</b>." },
@@ -284,6 +357,10 @@ label.l .req{color:var(--danger);margin-left:2px}
     $("toast-txt").textContent = txt; $("toast").classList.toggle("neutre", !!neutre); $("toast").hidden = false;
     clearTimeout(toast.t); toast.t = setTimeout(() => $("toast").hidden = true, 5000);
   };
+
+  // Page « extension de navigateur » : seul « Ajoutez-la plus tard » fait avancer, l'extension ne sera pas utilisée
+  $("b-plus-tard").addEventListener("click", () => { $("voile-ext").hidden = true; aller("points"); });
+  $("b-extension").addEventListener("click", () => toast("Pour la démonstration, cliquez sur « Ajoutez-la plus tard » : nous n'utiliserons pas l'extension.", true));
 
   // Menu ⋮ de l'organisation
   const ouvrirMenu = ouvert => { menu.hidden = !ouvert; points.setAttribute("aria-expanded", ouvert); };
@@ -338,7 +415,7 @@ label.l .req{color:var(--danger);margin-left:2px}
   addEventListener("keydown", e => { if ((e.key === "a" || e.key === "A") && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) basculer(); });
   addEventListener("keydown", e => { if (e.key === "Escape" && !voile.hidden) { fermerTout(); aller(inscrit ? null : "points"); } });
 
-  aller("points");
+  aller("extension");
 })();
 </script>
 </body>
