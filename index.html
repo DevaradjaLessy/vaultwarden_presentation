@@ -192,6 +192,22 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
 .pp-note{margin:40px 0 0;font:400 28px/1.45 var(--f-body);color:var(--soft)}
 .pp-note b{color:var(--text)}
 
+/* ── 6 bis. Solide ou pas ? (exercice, un verdict par clic) ── */
+.quiz .glow{--gx0:900px;--gy0:-300px;--gx:800px;--gy:-200px}
+.qz-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.qz-head .lead{display:flex;align-items:center;gap:20px;padding-bottom:8px;font-size:34px}
+.qz-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:24px 34px;margin-top:32px;position:relative;z-index:2}
+.qz{display:flex;flex-direction:column;justify-content:center;padding:26px 34px;border:2px solid var(--line);border-radius:24px;
+  background:linear-gradient(180deg,#FFFFFF,#F4F7FA);box-shadow:0 24px 50px rgba(15,23,32,.07);transition:border-color .5s ease,background .5s ease}
+.qz:has(.shown.non){border-color:rgba(214,59,47,.45);background:linear-gradient(180deg,rgba(214,59,47,.07),rgba(214,59,47,.01))}
+.qz:has(.shown.oui){border-color:rgba(0,133,123,.55);background:linear-gradient(180deg,rgba(0,133,123,.1),rgba(0,133,123,.02))}
+.qz-pwd{font:600 40px/1.2 var(--f-mono);color:var(--text);overflow-wrap:anywhere}
+.qz-v{display:flex;gap:18px;align-items:flex-start;margin-top:18px;font:400 27px/1.35 var(--f-body);color:var(--soft)}
+.qz-v .ico{width:46px;height:46px}
+.qz-v b{color:var(--alert);font-weight:700}
+.qz-v.oui b{color:var(--accent)}
+.recette{margin-top:30px;font-size:29px}
+
 /* ── 7. Chiffré sur votre poste ── */
 .cipher .glow{--gx0:600px;--gy0:200px;--gx:500px;--gy:120px}
 .flow{position:relative;display:grid;grid-template-columns:repeat(3,1fr);margin-top:64px;z-index:2}
@@ -372,6 +388,8 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   .tl-item .n{border-color:var(--accent);color:#FFFFFF;background:var(--accent)}
   .drawer.mine{transform:translateX(40px)}
   .todo .box svg{opacity:1;transform:none}
+  .qz:has(.non){border-color:rgba(214,59,47,.45)}
+  .qz:has(.oui){border-color:rgba(0,133,123,.55)}
   .packet{animation:none;left:calc(100% / 3)}
   .chrome{display:none}
 }
@@ -562,6 +580,45 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   </aside>
 </section>
 
+<!-- 6 bis · Solide ou pas&nbsp;? (exercice&nbsp;: vote à main levée, un verdict par clic) -->
+<section class="slide quiz">
+  <div class="glow"></div>
+  <p class="kicker a">01 · À vous de juger</p>
+  <div class="qz-head">
+    <h2 class="title a" style="--d:1">Solide ou pas&nbsp;?</h2>
+    <!-- Icône main d'après Lucide (licence ISC) -->
+    <p class="lead a" style="--d:2"><span class="hand-ico"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>Levez la main si vous le trouvez solide.</p>
+  </div>
+  <div class="qz-grid">
+    <div class="qz a" style="--d:3">
+      <div class="qz-pwd">Soleil2026!</div>
+      <div class="qz-v non step"><span class="ico x"><svg width="20" height="20" viewBox="0 0 22 22"><path d="M5 5l12 12M17 5L5 17" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><span><b>Trop facile.</b> Un mot courant, l'année et un point d'exclamation&nbsp;: c'est ce que les pirates essaient en premier.</span></div>
+    </div>
+    <div class="qz a" style="--d:4">
+      <div class="qz-pwd">Le jeudi, je mange 2 pizzas au port&nbsp;!</div>
+      <div class="qz-v oui step"><span class="ico ok"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>Solide.</b> Longue, personnelle et facile à retenir. Inventez la vôtre sur ce modèle.</span></div>
+    </div>
+    <div class="qz a" style="--d:5">
+      <div class="qz-pwd">Nathan14051987</div>
+      <div class="qz-v non step"><span class="ico x"><svg width="20" height="20" viewBox="0 0 22 22"><path d="M5 5l12 12M17 5L5 17" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><span><b>Devinable.</b> Un prénom et une date de naissance, ça se trouve sur Facebook. Même avec 14&nbsp;caractères.</span></div>
+    </div>
+    <div class="qz a" style="--d:6">
+      <div class="qz-pwd">P@ssw0rd!</div>
+      <div class="qz-v non step"><span class="ico x"><svg width="20" height="20" viewBox="0 0 22 22"><path d="M5 5l12 12M17 5L5 17" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><span><b>Fausse bonne idée.</b> Remplacer le a par @ ou le o par 0&nbsp;: les pirates connaissent l'astuce.</span></div>
+    </div>
+  </div>
+  <p class="banner recette step"><strong>La recette&nbsp;:</strong> une phrase d'au moins 5 mots, avec une majuscule, un chiffre et un signe. Jamais un prénom ni une date de naissance.</p>
+  <aside class="notes"><h4>4:15 → 5:45 · Solide ou pas&nbsp;?</h4>
+    <p>On s'entraîne. Je lis chaque mot de passe&nbsp;: levez la main si vous le trouvez solide. Puis <b>clic</b>&nbsp;: la réponse. Un clic par mot de passe (4 clics), puis un 5<sup>e</sup> pour la recette.</p>
+    <p><b>Soleil2026!</b>&nbsp;: un mot courant, l'année, un point d'exclamation. C'est la première chose que les pirates essaient.</p>
+    <p><b>La phrase des pizzas</b>&nbsp;: longue, personnelle, facile à retenir. C'est ça qu'on veut. Mais c'est un exemple&nbsp;: inventez la vôtre.</p>
+    <p><b>Nathan14051987</b>&nbsp;: le piège. Il fait bien 14 caractères, mais un prénom et une date de naissance se trouvent facilement sur les réseaux sociaux. La longueur ne suffit pas.</p>
+    <p><b>P@ssw0rd!</b>&nbsp;: remplacer des lettres par des symboles, les pirates le savent. Et «&nbsp;password&nbsp;», c'est «&nbsp;mot de passe&nbsp;» en anglais.</p>
+    <p><b>Clic</b>&nbsp;: la recette. Pas besoin de compter les caractères&nbsp;: une phrase de 5 mots dépasse presque toujours 14, et si elle est trop courte, l'écran vous le dira. Bonus&nbsp;: la recette marche aussi pour vos comptes personnels.</p>
+    <p>⚠️ Ne demander à personne de dire sa vraie phrase à voix haute.</p>
+  </aside>
+</section>
+
 <!-- 7 · Chiffré sur votre poste (schéma) -->
 <section class="slide cipher">
   <div class="glow"></div>
@@ -590,7 +647,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
     <p class="banner a" style="--d:5"><strong>Comme une consigne de gare</strong> : elle garde la valise, sans la clé du cadenas. Votre mot de passe principal, personne ne le connaît.</p>
     <p class="honest step"><b>Ce que vous rangez dans l'espace de l'entreprise lui appartient</b>, comme un dossier partagé&nbsp;: les administrateurs du coffre y ont accès. Accès pros uniquement&nbsp;: ni banque, ni réseaux sociaux.</p>
   </div>
-  <aside class="notes"><h4>4:15 → 5:30 · Chiffré sur votre poste</h4>
+  <aside class="notes"><h4>5:45 → 7:00 · Chiffré sur votre poste</h4>
     <p>Le mot important, c'est <b>chiffré</b> : rendu illisible. Et c'est fait <b>sur votre poste</b>, avant que rien ne parte.</p>
     <p>Pensez à une consigne de gare&nbsp;: vous fermez votre valise avec votre cadenas, puis vous la confiez. La consigne garde la valise, mais n'a pas la clé du cadenas. Le serveur, c'est la consigne&nbsp;: <b>personne, pas même l'administrateur du serveur, ne peut lire votre mot de passe principal</b>.</p>
     <p><b>Clic</b> : une précision, pour être honnête. Ce que vous rangerez dans l'espace de l'entreprise lui appartiendra, comme un dossier partagé&nbsp;: les administrateurs du coffre y ont accès. C'est pour ça que le coffre sert <b>aux accès professionnels uniquement</b> : pas votre banque, pas vos réseaux sociaux.</p>
@@ -618,7 +675,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
     <div class="arr a" style="--d:6"><svg width="64" height="20" viewBox="0 0 64 20"><path d="M2 10h56m-10-8 10 8-10 8" fill="none" stroke="#A7B2BE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div class="c after a" style="--d:6"><span class="ico ok"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>L'accès reste à l'entreprise</div>
   </div>
-  <aside class="notes"><h4>5:30 → 6:30 · Avant / avec</h4>
+  <aside class="notes"><h4>7:00 → 8:00 · Avant / avec</h4>
     <p>Ce n'est pas un outil de plus&nbsp;: c'est ce qui <b>remplace</b> le post-it, le cahier et le fichier Excel.</p>
     <p>Le mot de passe solide, c'est le coffre qui le crée pour vous, en un clic.</p>
   </aside>
@@ -644,7 +701,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
       <div class="def step"><span class="ico2"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/></svg></span><div><h3>Un collègue s'en va&nbsp;?</h3><p>Ses accès restent dans l'armoire.</p></div></div>
     </div>
   </div>
-  <aside class="notes"><h4>6:30 → 7:30 · L'armoire et ses tiroirs</h4>
+  <aside class="notes"><h4>8:00 → 9:00 · L'armoire et ses tiroirs</h4>
     <p>Vous verrez ces deux mots à l'écran&nbsp;: « organisation » et « collections ». Un accès partagé par plusieurs collègues est rangé dans une <b>collection</b>, un tiroir de l'armoire commune. Vous ne verrez que les tiroirs de votre service.</p>
     <p><b>Clic</b> : besoin d'un accès&nbsp;? Vous demanderez le partage à l'équipe informatique, dans FreshService.</p>
     <p><b>Clic</b> : et quand un collègue s'en va, ses accès ne partent plus avec lui&nbsp;: ils restent dans l'armoire, et on change les mots de passe partagés.</p>
@@ -663,7 +720,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
     <div class="tl-item step"><div class="n">3</div><h3>Rejoindre l'organisation</h3><p>L'équipe confirme, parfois en vous faisant lire votre <b>phrase d'empreinte</b> : des mots affichés, pas un secret.</p></div>
     <div class="tl-item step"><div class="n">4</div><h3>Votre filet de sécurité</h3><p>La récupération de compte&nbsp;: en cas d'oubli, l'équipe vous redonne l'accès.</p></div>
   </div>
-  <aside class="notes"><h4>7:30 → 8:45 · Les 4 étapes</h4>
+  <aside class="notes"><h4>9:00 → 10:15 · Les 4 étapes</h4>
     <p>Un clic par étape. Le jour où vous recevez l'invitation, faites-le <b>tout de suite</b> : le lien expire. ⚠️ L'expéditeur est vaultwarden@semac.re ; donner le jour d'envoi&nbsp;; un doute sur un mail&nbsp;: on nous écrit avant de cliquer.</p>
     <p>On vous proposera l'extension de navigateur&nbsp;: cliquez sur «&nbsp;<b>Ajoutez-la plus tard</b>&nbsp;».</p>
     <p>À l'étape 3, l'équipe informatique peut vous demander de <b>lire votre phrase d'empreinte</b> : quelques mots affichés à l'écran, qui ne sont pas un secret. C'est la preuve que c'est bien vous. Jamais votre mot de passe, jamais un code.</p>
@@ -713,7 +770,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
       <span class="mn-txt">4:00</span>
     </div>
   </div>
-  <aside class="notes"><h4>8:45 → 12:45 · À vous : le parcours</h4>
+  <aside class="notes"><h4>10:15 → 14:15 · À vous : le parcours</h4>
     <p>Avant la séance : envoyer à chacun le lien de la démonstration, et vérifier qu'il s'ouvre sur les postes de la salle.</p>
     <p>Deux boutons, chacun dans un nouvel onglet : «&nbsp;L'inscription&nbsp;» ouvre le parcours depuis le mail d'invitation ; «&nbsp;Utilisation de l'application&nbsp;» va directement à «&nbsp;Et maintenant ?&nbsp;» puis au bureau Windows. Vous montrez à l'écran, puis vous revenez au diaporama en fermant l'onglet ou avec Ctrl + Tab.</p>
     <p><b>Clic</b> : lance le chrono de 4 minutes. Dire : « Ouvrez le lien et suivez les boutons. Tapez un mot de passe d'exemple, jamais le vôtre. La phrase d'empreinte est fictive : le jour J, vous la comparerez avec celle que je vous donnerai. »</p>
@@ -733,7 +790,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
       <div class="keys"><span class="kbd"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8.5" height="8.5"/><rect x="12.5" y="3" width="8.5" height="8.5"/><rect x="3" y="12.5" width="8.5" height="8.5"/><rect x="12.5" y="12.5" width="8.5" height="8.5"/></svg>Windows</span>+<span class="kbd">L</span></div></div>
   </div>
   <p class="banner alert a" style="--d:5"><strong>Personne, pas même l'équipe informatique, ne vous demandera votre mot de passe principal.</strong> Un faux mail «&nbsp;Bitwarden&nbsp;»&nbsp;? Ne cliquez pas, signalez-le.</p>
-  <aside class="notes"><h4>12:45 → 13:45 · Les 3 règles d'or</h4>
+  <aside class="notes"><h4>14:15 → 15:15 · Les 3 règles d'or</h4>
     <p>Même moi, je ne vous le demanderai jamais. Si quelqu'un vous le demande, au téléphone ou par mail, c'est une arnaque.</p>
     <p>Et si vous recevez un faux courriel «&nbsp;Bitwarden&nbsp;» qui vous presse de vous reconnecter par un lien&nbsp;: ne cliquez pas, signalez-le. Vous vous souvenez de la «&nbsp;20 minutes SI&nbsp;» sur le phishing&nbsp;? C'est exactement ça.</p>
   </aside>
@@ -760,7 +817,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
       <small>Repérez seulement, ne recopiez rien. Le jour J, ils passent dans le coffre, puis au broyeur.</small>
     </div>
   </div>
-  <aside class="notes"><h4>13:45 → 14:15 · Besoin d'aide et défi</h4>
+  <aside class="notes"><h4>15:15 → 15:45 · Besoin d'aide et défi</h4>
     <p>Vous recevrez votre invitation pendant la semaine du déploiement (⚠️ <b>dire les dates</b>, vérifiées avant la séance), et vous ne serez pas seuls&nbsp;: l'équipe informatique sera disponible sur Teams et sur place.</p>
     <p>D'ici là, un défi&nbsp;: repérez tous vos post-it et cahiers de mots de passe. Le jour où vous aurez le coffre, ils y passeront, puis direction la poubelle.</p>
     <p>⚠️ Ne pas leur faire écrire la liste de leurs mots de passe&nbsp;: seulement repérer où ils sont.</p>
@@ -777,7 +834,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
     <div class="byline a" style="--d:3"><span class="pill">Équipe informatique</span>Dévaradja Lessy</div>
   </div>
   <div class="vault-slot"></div>
-  <aside class="notes"><h4>14:15 → 14:45 · Merci</h4>
+  <aside class="notes"><h4>15:45 → 16:15 · Merci</h4>
     <p>Les questions plus longues&nbsp;: Teams ou FreshService, et le chapitre 12 du guide. Envoyer le guide PDF juste après la séance.</p>
   </aside>
 </section>
