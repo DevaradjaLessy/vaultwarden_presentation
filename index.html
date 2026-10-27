@@ -178,21 +178,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
 .sol-lien svg{width:96px;height:44px;color:var(--accent)}
 .solution .banner{margin-top:auto}
 
-/* ── 6. « 14 » : la phrase de passe ── */
-.passphrase .glow{--gx0:-300px;--gy0:-200px;--gx:-180px;--gy:-120px}
-.passphrase .title{font-size:84px;max-width:1640px}
-.pp-grid{flex:1;display:grid;grid-template-columns:480px 1fr;gap:90px;align-items:center;position:relative;z-index:2}
-.big14{text-align:center}
-.big14 b{display:block;font:900 320px/.8 var(--f-title);color:var(--accent);letter-spacing:-.05em}
-.big14 span{display:block;margin-top:40px;font:600 26px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
-.field{margin-top:0;padding:30px 36px;border:2px solid #D3DAE2;border-radius:20px;background:#F6F8FA}
-.field label{display:block;font:600 20px/1 var(--f-body);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.typed{display:flex;align-items:center;min-height:64px;margin-top:18px;font:600 42px/1.2 var(--f-mono);color:var(--text);white-space:pre}
-.typed .caret{height:48px;margin-left:4px}
-.pp-note{margin:40px 0 0;font:400 28px/1.45 var(--f-body);color:var(--soft)}
-.pp-note b{color:var(--text)}
-
-/* ── 6 bis. Solide ou pas ? (exercice, un verdict par clic) ── */
+/* ── 5 bis. Solide ou pas ? (exercice, un verdict par clic) ── */
 .quiz .glow{--gx0:900px;--gy0:-300px;--gx:800px;--gy:-200px}
 .qz-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
 .qz-head .lead{display:flex;align-items:center;gap:20px;padding-bottom:8px;font-size:34px}
@@ -206,7 +192,20 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
 .qz-v .ico{width:46px;height:46px}
 .qz-v b{color:var(--alert);font-weight:700}
 .qz-v.oui b{color:var(--accent)}
-.recette{margin-top:30px;font-size:29px}
+
+/* ── 6. « 14 » : la phrase de passe ── */
+.passphrase .glow{--gx0:-300px;--gy0:-200px;--gx:-180px;--gy:-120px}
+.passphrase .title{font-size:84px;max-width:1640px}
+.pp-grid{flex:1;display:grid;grid-template-columns:480px 1fr;gap:90px;align-items:center;position:relative;z-index:2}
+.big14{text-align:center}
+.big14 b{display:block;font:900 320px/.8 var(--f-title);color:var(--accent);letter-spacing:-.05em}
+.big14 span{display:block;margin-top:40px;font:600 26px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.field{margin-top:0;padding:30px 36px;border:2px solid #D3DAE2;border-radius:20px;background:#F6F8FA}
+.field label{display:block;font:600 20px/1 var(--f-body);letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.typed{display:flex;align-items:center;min-height:64px;margin-top:18px;font:600 42px/1.2 var(--f-mono);color:var(--text);white-space:pre}
+.typed .caret{height:48px;margin-left:4px}
+.pp-note{margin:40px 0 0;font:400 28px/1.45 var(--f-body);color:var(--soft)}
+.pp-note b{color:var(--text)}
 
 /* ── 7. Chiffré sur votre poste ── */
 .cipher .glow{--gx0:600px;--gy0:200px;--gx:500px;--gy:120px}
@@ -558,29 +557,7 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
   </aside>
 </section>
 
-<!-- 6 · «&nbsp;14&nbsp;»&nbsp;: choisir sa clé -->
-<section class="slide passphrase">
-  <div class="glow"></div>
-  <p class="kicker a">01 · Qu'est-ce que c'est&nbsp;?</p>
-  <h2 class="title a" style="--d:1">Votre mot de passe principal&nbsp;: une phrase de 14 caractères ou plus.</h2>
-  <div class="pp-grid">
-    <div class="big14 pop" style="--d:2"><b data-count="14">14</b><span>caractères minimum</span></div>
-    <div>
-      <div class="field a" style="--d:3" data-type="Mon bus de 7h42 part du quai B !">
-        <label>Exemple de mot de passe principal</label>
-        <div class="typed"><span class="txt"></span><span class="caret"></span></div>
-      </div>
-      <p class="pp-note a" style="--d:4"><b>Inventez la vôtre</b>, ne reprenez pas cet exemple. Et elle ne sert <b>qu'au coffre</b>&nbsp;: ni Windows, ni la messagerie.</p>
-    </div>
-  </div>
-  <aside class="notes"><h4>3:30 → 4:15 · 14 caractères</h4>
-    <p>C'est le seul mot de passe à retenir, alors on le choisit bien&nbsp;: <b>14 caractères minimum</b>, avec majuscule, minuscule, chiffre et caractère spécial.</p>
-    <p>Le plus simple, c'est une petite phrase de tous les jours, avec un chiffre et un signe, par exemple « Mon bus de 7h42 part du quai B ! ». Ne prenez pas celle-là, inventez la vôtre.</p>
-    <p>Il ne sert <b>qu'au coffre</b> : pas votre mot de passe Windows, pas celui de votre messagerie. D'ailleurs, Cybermalveillance.gouv.fr recommande d'utiliser un gestionnaire de mots de passe sécurisé.</p>
-  </aside>
-</section>
-
-<!-- 6 bis · Solide ou pas&nbsp;? (exercice&nbsp;: vote à main levée, un verdict par clic) -->
+<!-- 5 bis · Solide ou pas&nbsp;? (exercice&nbsp;: vote à main levée, un verdict par clic) -->
 <section class="slide quiz">
   <div class="glow"></div>
   <p class="kicker a">01 · À vous de juger</p>
@@ -607,15 +584,36 @@ body{font-family:var(--f-body);color:var(--text);-webkit-font-smoothing:antialia
       <div class="qz-v non step"><span class="ico x"><svg width="20" height="20" viewBox="0 0 22 22"><path d="M5 5l12 12M17 5L5 17" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><span><b>Fausse bonne idée.</b> Remplacer le a par @ ou le o par 0&nbsp;: les pirates connaissent l'astuce.</span></div>
     </div>
   </div>
-  <p class="banner recette step"><strong>La recette&nbsp;:</strong> une phrase d'au moins 5 mots, avec une majuscule, un chiffre et un signe. Jamais un prénom ni une date de naissance.</p>
-  <aside class="notes"><h4>4:15 → 5:45 · Solide ou pas&nbsp;?</h4>
-    <p>On s'entraîne. Je lis chaque mot de passe&nbsp;: levez la main si vous le trouvez solide. Puis <b>clic</b>&nbsp;: la réponse. Un clic par mot de passe (4 clics), puis un 5<sup>e</sup> pour la recette.</p>
+  <aside class="notes"><h4>3:30 → 5:00 · Solide ou pas&nbsp;?</h4>
+    <p>Petit test avant de choisir votre mot de passe principal. Je lis chaque mot de passe&nbsp;: levez la main si vous le trouvez solide. Puis <b>clic</b>&nbsp;: la réponse. Un clic par mot de passe (4 clics).</p>
     <p><b>Soleil2026!</b>&nbsp;: un mot courant, l'année, un point d'exclamation. C'est la première chose que les pirates essaient.</p>
     <p><b>La phrase des pizzas</b>&nbsp;: longue, personnelle, facile à retenir. C'est ça qu'on veut. Mais c'est un exemple&nbsp;: inventez la vôtre.</p>
     <p><b>Nathan14051987</b>&nbsp;: le piège. Il fait bien 14 caractères, mais un prénom et une date de naissance se trouvent facilement sur les réseaux sociaux. La longueur ne suffit pas.</p>
     <p><b>P@ssw0rd!</b>&nbsp;: remplacer des lettres par des symboles, les pirates le savent. Et «&nbsp;password&nbsp;», c'est «&nbsp;mot de passe&nbsp;» en anglais.</p>
-    <p><b>Clic</b>&nbsp;: la recette. Pas besoin de compter les caractères&nbsp;: une phrase de 5 mots dépasse presque toujours 14, et si elle est trop courte, l'écran vous le dira. Bonus&nbsp;: la recette marche aussi pour vos comptes personnels.</p>
+    <p>Pour enchaîner&nbsp;: «&nbsp;Alors, comment on fait un bon mot de passe&nbsp;? C'est la diapo suivante.&nbsp;» Bonus&nbsp;: ce qu'on vient de voir marche aussi pour vos comptes personnels.</p>
     <p>⚠️ Ne demander à personne de dire sa vraie phrase à voix haute.</p>
+  </aside>
+</section>
+
+<!-- 6 · «&nbsp;14&nbsp;»&nbsp;: choisir sa clé -->
+<section class="slide passphrase">
+  <div class="glow"></div>
+  <p class="kicker a">01 · Qu'est-ce que c'est&nbsp;?</p>
+  <h2 class="title a" style="--d:1">Votre mot de passe principal&nbsp;: une phrase de 14 caractères ou plus.</h2>
+  <div class="pp-grid">
+    <div class="big14 pop" style="--d:2"><b data-count="14">14</b><span>caractères minimum</span></div>
+    <div>
+      <div class="field a" style="--d:3" data-type="Mon bus de 7h42 part du quai B !">
+        <label>Exemple de mot de passe principal</label>
+        <div class="typed"><span class="txt"></span><span class="caret"></span></div>
+      </div>
+      <p class="pp-note a" style="--d:4"><b>Inventez la vôtre</b>, ne reprenez pas cet exemple. Et elle ne sert <b>qu'au coffre</b>&nbsp;: ni Windows, ni la messagerie.</p>
+    </div>
+  </div>
+  <aside class="notes"><h4>5:00 → 5:45 · 14 caractères</h4>
+    <p>C'est le seul mot de passe à retenir, alors on le choisit bien&nbsp;: <b>14 caractères minimum</b>, avec majuscule, minuscule, chiffre et caractère spécial.</p>
+    <p>Vous avez vu la phrase des pizzas&nbsp;: c'est exactement ça. Le plus simple, c'est une petite phrase de tous les jours, avec un chiffre et un signe, par exemple « Mon bus de 7h42 part du quai B ! ». Ne prenez pas celle-là, inventez la vôtre.</p>
+    <p>Il ne sert <b>qu'au coffre</b> : pas votre mot de passe Windows, pas celui de votre messagerie. D'ailleurs, Cybermalveillance.gouv.fr recommande d'utiliser un gestionnaire de mots de passe sécurisé.</p>
   </aside>
 </section>
 
